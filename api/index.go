@@ -1,25 +1,22 @@
 package api
 
 import (
-	"chookeye-core/handlers"
+	"chookeye-core/routes"
 	"github.com/gin-gonic/gin"
 )
 
+var router = gin.Default()
+
 func SetupRouter() *gin.Engine {
 
-	r := gin.Default()
+	route := router.Group("/")
 
-	//system
-	r.GET("/ping", handlers.Pong)
-	r.GET("/healthcheck", handlers.Health)
-	r.GET("/health", handlers.Health)
-	r.GET("/heart", handlers.Health)
-	r.GET("/heartbeat", handlers.Health)
+	//system: routes for logs and pings and heartbeat
+	routes.AddSystemRoutes(route)
 
-	//middleware
+	//middleware: attach the middleare here
 
-	//routes
+	//routes: routes created here
 
-	return r
-
+	return router
 }
