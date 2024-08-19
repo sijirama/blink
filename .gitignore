@@ -1,0 +1,52 @@
+# Go build artifacts
+/bin/
+/pkg/
+/main
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Logs and debugging files
+*.log
+
+# Dependency directories (remove the comment if you use Go vendor mode)
+vendor/
+
+# Go modules
+go.sum
+go.mod~
+
+# Air-specific files
+# .air
+# .air.toml
+#
+# IDE/editor directories and files
+.vscode/
+.idea/
+*.swp
+
+# Docker-related files
+# docker-compose.override.yml
+# docker-compose.dev.yml
+# .dockerignore
+#
+# Project-specific temp files and directories
+/tmp/
+node_modules/
+
+# Generated files
+*.out
+*.test
+coverage.out
+
+# Environmental variables
+.env
+.env*
+
+# Build artifacts from Docker
+*.tar
+
