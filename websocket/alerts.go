@@ -3,6 +3,7 @@ package websocket
 import (
 	// "chookeye-core/database"
 	// "chookeye-core/schemas"
+	"chookeye-core/handlers"
 	"fmt"
 	"github.com/zishang520/socket.io/v2/socket"
 )
@@ -11,54 +12,50 @@ func registerAlertEventHandlers(io *socket.Server) {
 	io.On("connection", handleAlertConnection)
 }
 
+var alertClient *socket.Socket
+var alertRoomName socket.Room
+
 func handleAlertConnection(clients ...any) {
-	client := clients[0].(*socket.Socket)
+	alertClient = clients[0].(*socket.Socket)
 	fmt.Printf("New client connected: %s", client.Id())
 
-	client.On("join_alert_room", handleJoinAlertRoom)
-	client.On("disconnect", handleAlertDisconnect)
+	alertClient.On("join_alert_room", handleJoinAlertRoom)
+	alertClient.On("disconnect", handleAlertDisconnect)
 }
 
 func handleJoinAlertRoom(args ...any) {
-	client := args[0].(*socket.Socket)
-	roomName := args[1].(socket.Room)
-	fmt.Printf("Client %s joined alert room: %s\n", client.Id(), roomName)
-	client.Join(roomName)
+
+	latitude := args[1].(float64)
+	longitude := args[2].(float64)
+
+	roomName := getLocationRoomName(latitude, longitude)
+	alertRoomName = roomName
+
+	fmt.Printf("Client %s joined alert room: %s\n", alertClient.Id(), roomName)
+	alertClient.Join(roomName)
 
 	// Emit all alerts to the client
-	emitAllAlerts(client, roomName)
+	emitNearbyAlerts(client, roomName, latitude, longitude)
 }
 
 func handleAlertDisconnect(args ...any) {
-	client := args[0].(*socket.Socket)
-	fmt.Printf("Client disconnected: %s", client.Id())
+	alertClient.Leave(alertRoomName)
+	fmt.Printf("Client disconnected: %s", alertClient.Id())
 }
 
-func emitAllAlerts(client *socket.Socket, roomName socket.Room) {
-	// Retrieve all alerts from your data source and emit them to the client
-	alerts := getAllAlertsFromDataSource()
+func emitNearbyAlerts(client *socket.Socket, roomName socket.Room, latitude, longitude float64) {
+	alerts, err := handlers.GetAlertsNearLocation(latitude, longitude, 1000) // 1000 meters radius
+	if err != nil {
+		// Handle error
+		return
+	}
 	for _, alert := range alerts {
 		client.To(roomName).Emit("alert", alert)
 	}
 }
 
-func getAllAlertsFromDataSource() []interface{} {
-	// Implement your logic to fetch all alerts from the data source
-	return []interface{}{
-		map[string]interface{}{"id": "1", "message": "This is alert 1"},
-		map[string]interface{}{"id": "2", "message": "This is alert 2"},
-	}
+func getLocationRoomName(latitude, longitude float64) socket.Room {
+	// Generate a unique room name based on the location
+	// e.g., using a geohash or combining latitude and longitude
+	return socket.Room(fmt.Sprintf("alert-room-%f-%f", latitude, longitude))
 }
-
-// func InitializeAlertsEvents() {
-// 	Server.OnEvent("/", "get_alerts", func(s socketio.Conn, location schemas.Location) {
-// 		alerts := fetchAlertsInGeoZone(location)
-// 		s.Emit("alerts", alerts)
-// 	})
-// }
-//
-// func fetchAlertsInGeoZone(location schemas.Location) []schemas.Alert {
-// 	var alerts []schemas.Alert
-// 	database.Store.Find(&alerts)
-// 	return alerts
-// }

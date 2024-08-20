@@ -6,10 +6,7 @@ import (
 	"chookeye-core/schemas"
 	"chookeye-core/validators"
 	"github.com/gin-gonic/gin"
-	//"github.com/gorilla/websocket"
-	//"log"
 	"net/http"
-	//"sync"
 )
 
 type createAlertRequest struct {
@@ -67,4 +64,10 @@ func CreateAlertHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"alert": alert})
+}
+
+func GetAlertsNearLocation(latitude, longitude float64, radius float64) ([]schemas.Alert, error) {
+	var alerts []schemas.Alert
+	err := database.Store.Where("ST_Distance(location, ST_MakePoint(?, ?)) <= ?", latitude, longitude, radius).Find(&alerts).Error
+	return alerts, err
 }
