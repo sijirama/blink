@@ -14,6 +14,7 @@ func SetupRouter() *gin.Engine {
 	//system: routes for logs and pings and heartbeat
 	routes.AddSystemRoutes(route)
 	routes.AddAuthenticationRoutes(route)
+	routes.AddAlertRoutes(route)
 
 	//middleware: attach the middleare here
 

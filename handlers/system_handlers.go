@@ -9,7 +9,7 @@ import (
 
 func Pong(x *gin.Context) {
 	x.JSON(200, gin.H{
-		"message": "pong",
+		"message": "pong pong pong pong",
 	})
 }
 
