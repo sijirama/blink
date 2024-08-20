@@ -20,7 +20,6 @@ func AddAuthenticationRoutes(r *gin.RouterGroup) {
 		protected.Use(middleware.AuthMiddleware())
 		{
 			protected.POST("/refresh-token", handlers.RefreshToken)
-			// Add other protected routes here
 		}
 	}
 }
