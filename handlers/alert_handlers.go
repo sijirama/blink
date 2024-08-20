@@ -19,11 +19,6 @@ func CreateAlertHandler(c *gin.Context) {
 
 	var requestBody createAlertRequest
 
-	// if err := c.ShouldBindJSON(&requestBody); err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
-	// 	return
-	// }
-
 	if !validators.ValidateRequestBody(c, &requestBody) {
 		return
 	}
