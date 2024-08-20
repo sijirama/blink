@@ -13,6 +13,7 @@ func AddAlertRoutes(r *gin.RouterGroup) {
 		alert.Use(middleware.AuthMiddleware())
 		{
 			alert.POST("/", handlers.CreateAlertHandler)
+			//alert.GET("/subscribe", handlers.SubscribeAlertsHandler)
 		}
 	}
 

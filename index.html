@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Testing Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #status { margin-bottom: 10px; }
+        #messages { margin-top: 20px; border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; }
+        #inputArea { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Test Page</h1>
+    <div id="status">Connecting...</div>
+    <div id="messages">
+        <p>No messages yet.</p>
+    </div>
+    <div id="inputArea">
+        <input type="text" id="messageInput" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+    <script>
+        const socket = io("http://localhost:8000");
+
+
+        socket.on("chat message", (msg) => {
+        console.log("Client side: " + msg)
+      })
+
+
+        const statusDiv = document.getElementById("status");
+        const messagesDiv = document.getElementById("messages");
+        const messageInput = document.getElementById("messageInput");
+
+        function updateStatus(status) {
+            statusDiv.textContent = status;
+        }
+
+        function addMessage(msg) {
+            const p = document.createElement("p");
+            p.textContent = msg;
+            messagesDiv.appendChild(p);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        socket.on("connect", () => {
+            socket.emit("chat message", "hello world!") //emitting the message from 1 client
+            updateStatus("Connected to server");
+            addMessage("Connected to server.");
+            socket.emit("ping", "Hello Server");
+        });
+
+        socket.on("pong", (msg) => {
+            addMessage("Received pong: " + msg);
+        });
+
+        socket.on("connect_error", (error) => {
+            updateStatus("Connection Error: " + error.message);
+            addMessage("Connection Error: " + error.message);
+        });
+
+        socket.on("disconnect", (reason) => {
+            updateStatus("Disconnected: " + reason);
+            addMessage("Disconnected: " + reason);
+        });
+
+        function sendMessage() {
+            const msg = messageInput.value;
+            if (msg) {
+                socket.emit("notice", msg);
+                addMessage("Sent: " + msg);
+                messageInput.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
+

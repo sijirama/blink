@@ -5,9 +5,11 @@ import (
 	"chookeye-core/lib"
 	"chookeye-core/schemas"
 	"chookeye-core/validators"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	//"github.com/gorilla/websocket"
+	//"log"
+	"net/http"
+	//"sync"
 )
 
 type createAlertRequest struct {
