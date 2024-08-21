@@ -51,7 +51,4 @@ func connectDB() {
 	}
 	// Store the underlying *sql.DB instance for lower-level operations
 	Store = db
-	if err != nil {
-		panic("failed to get the underlying SQL DB: " + err.Error())
-	}
 }

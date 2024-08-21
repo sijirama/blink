@@ -2,9 +2,8 @@ package websocket
 
 import (
 	"fmt"
-	"log"
-
 	"github.com/zishang520/socket.io/v2/socket"
+	"log"
 )
 
 func registerSystemEventHandlers(io *socket.Server) {

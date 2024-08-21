@@ -15,6 +15,8 @@ import (
 	"log"
 )
 
+var SocketServer *socket.Server
+
 func StartServer(route *gin.RouterGroup) {
 	httpServer := types.NewWebServer(nil)
 	io := socket.NewServer(httpServer, nil)
@@ -28,6 +30,7 @@ func StartServer(route *gin.RouterGroup) {
 		next(nil)
 	})
 
+	SocketServer = io
 	registerEventHandlers(io)
 
 	route.Any("/socket.io/*path", gin.WrapH(io.ServeHandler(nil)))

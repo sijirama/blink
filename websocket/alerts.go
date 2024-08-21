@@ -1,7 +1,8 @@
 package websocket
 
 import (
-	"chookeye-core/handlers"
+	"chookeye-core/broadcast"
+	"chookeye-core/database"
 	"fmt"
 	"log"
 	"strconv"
@@ -9,9 +10,6 @@ import (
 
 	"github.com/zishang520/socket.io/v2/socket"
 )
-
-// var alertClient *socket.Socket
-var alertRoomName socket.Room
 
 func registerAlertEventHandlers(io *socket.Server) {
 	io.On("connection", handleAlertConnection)
@@ -54,30 +52,33 @@ func handleJoinAlertRoom(client *socket.Socket, args ...any) {
 		return
 	}
 
-	roomName := getLocationRoomName(latitude, longitude)
-	alertRoomName = roomName
+	clientLocation := broadcast.ClientLocation{
+		Latitude:  latitude,
+		Longitude: longitude,
+		Radius:    radius,
+		Socket:    client,
+	}
+	broadcast.RegisterClient(string(client.Id()), clientLocation)
 
-	client.Join(roomName)
-	log.Printf("Client %s joined alert room: %s\n", client.Id(), roomName)
+	log.Printf("Client %s joined alert room at location: %v\n", client.Id(), clientLocation)
 
-	emitNearbyAlerts(client, roomName, latitude, longitude, radius)
+	emitNearbyAlerts(client, latitude, longitude, radius)
 }
 
 func handleAlertDisconnect(client *socket.Socket) {
-	client.Leave(alertRoomName)
+	broadcast.RemoveClient(string(client.Id()))
 	fmt.Printf("Client disconnected: %s", client.Id())
 }
 
-func emitNearbyAlerts(client *socket.Socket, roomName socket.Room, latitude, longitude, radius float64) {
-	alerts, err := handlers.GetAlertsNearLocation(latitude, longitude, radius) // 1000 meters radius
+func emitNearbyAlerts(client *socket.Socket, latitude, longitude, radius float64) {
+	alerts, err := database.GetAlertsNearLocation(latitude, longitude, radius) // 1000 meters radius
 	if err != nil {
 		log.Printf("Error getting alerts: %s", err.Error())
 		return
 	}
 
 	for _, alert := range alerts {
-		//err := client.Emit("alert", alert)
-		err := client.To(alertRoomName).Emit("alert", alert)
+		err := client.Emit("alert", alert)
 		if err != nil {
 			log.Println("Error emitting alerts:", err.Error())
 			continue
