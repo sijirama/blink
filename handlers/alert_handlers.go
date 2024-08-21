@@ -94,18 +94,17 @@ func GetAlertsNearLocation4(latitude, longitude float64, radius float64) ([]sche
 }
 
 func GetAlertsNearLocation(latitude, longitude float64, radius float64) ([]schemas.Alert, error) {
-	fmt.Println("Latitude:", latitude, "Longitude:", longitude)
 	var alerts []schemas.Alert
 
 	// Using the Haversine formula to calculate distance
+	//https://en.wikipedia.org/wiki/Haversine_formula
+
 	err := database.Store.Where(`
         6371000 * acos(
             cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
             sin(radians(?)) * sin(radians(latitude))
         ) <= ?
     `, latitude, longitude, latitude, radius).Find(&alerts).Error
-
-	//fmt.Printf("Retrieved %v alerts from database", len(alerts))
 
 	return alerts, err
 }
