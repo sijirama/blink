@@ -76,12 +76,15 @@ func emitNearbyAlerts(client *socket.Socket, roomName socket.Room, latitude, lon
 		return
 	}
 
-	//client.To(roomName).Emit("alerts", alerts)
+	// for _, alert := range alerts {
+	// 	client.To(roomName).Emit("alert", alert)
+	// }
+
 	for _, alert := range alerts {
-		//err := client.To(roomName).Emit("alert", alert)
 		err := client.Emit("alert", alert)
+		//err := client.To(roomName).Emit("alert", alert)
 		if err != nil {
-			fmt.Println("Error emitting alerts:", err.Error())
+			log.Println("Error emitting alerts:", err.Error())
 			continue
 		}
 		fmt.Printf("Emitting alert: %v %v\n", alert.ID, alert.Title)
