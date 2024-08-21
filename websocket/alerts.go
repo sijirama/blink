@@ -5,32 +5,32 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"sync"
 
 	"github.com/zishang520/socket.io/v2/socket"
 )
+
+// var alertClient *socket.Socket
+var alertRoomName socket.Room
 
 func registerAlertEventHandlers(io *socket.Server) {
 	io.On("connection", handleAlertConnection)
 }
 
-var alertClient *socket.Socket
-var alertRoomName socket.Room
-
 func handleAlertConnection(clients ...any) {
-	alertClient = clients[0].(*socket.Socket)
-	fmt.Printf("\nNew client in the alert connected: %s\n", alertClient.Id())
+	alertClient := clients[0].(*socket.Socket)
 
-	log.Println("Preeeeeee Join alert room handler called")
 	alertClient.On("join_alert_room", func(args ...any) {
-		handleJoinAlertRoom(args...)
+		handleJoinAlertRoom(alertClient, args...)
 	})
 
-	//alertClient.On("join_alert_room", handleJoinAlertRoom)
-	alertClient.On("disconnect", handleAlertDisconnect)
+	alertClient.On("disconnect", func(args ...any) {
+		handleAlertDisconnect(alertClient)
+	})
 }
 
-func handleJoinAlertRoom(args ...any) {
-	fmt.Println(len(args))
+func handleJoinAlertRoom(client *socket.Socket, args ...any) {
+
 	latitudeStr := args[0].(string)
 	longitudeStr := args[1].(string)
 	radiusStr := args[2].(string)
@@ -54,19 +54,18 @@ func handleJoinAlertRoom(args ...any) {
 		return
 	}
 
-	// Proceed with the rest of the logic
 	roomName := getLocationRoomName(latitude, longitude)
 	alertRoomName = roomName
 
-	alertClient.Join(roomName)
-	log.Printf("Client %s joined alert room: %s\n", alertClient.Id(), roomName)
+	client.Join(roomName)
+	log.Printf("Client %s joined alert room: %s\n", client.Id(), roomName)
 
-	// Emit all alerts to the client
-	emitNearbyAlerts(alertClient, roomName, latitude, longitude, radius)
+	emitNearbyAlerts(client, roomName, latitude, longitude, radius)
 }
-func handleAlertDisconnect(args ...any) {
-	alertClient.Leave(alertRoomName)
-	fmt.Printf("Client disconnected: %s", alertClient.Id())
+
+func handleAlertDisconnect(client *socket.Socket) {
+	client.Leave(alertRoomName)
+	fmt.Printf("Client disconnected: %s", client.Id())
 }
 
 func emitNearbyAlerts(client *socket.Socket, roomName socket.Room, latitude, longitude, radius float64) {
@@ -76,13 +75,9 @@ func emitNearbyAlerts(client *socket.Socket, roomName socket.Room, latitude, lon
 		return
 	}
 
-	// for _, alert := range alerts {
-	// 	client.To(roomName).Emit("alert", alert)
-	// }
-
 	for _, alert := range alerts {
-		err := client.Emit("alert", alert)
-		//err := client.To(roomName).Emit("alert", alert)
+		//err := client.Emit("alert", alert)
+		err := client.To(alertRoomName).Emit("alert", alert)
 		if err != nil {
 			log.Println("Error emitting alerts:", err.Error())
 			continue
@@ -92,19 +87,20 @@ func emitNearbyAlerts(client *socket.Socket, roomName socket.Room, latitude, lon
 }
 
 func getLocationRoomName(latitude, longitude float64) socket.Room {
-	// Convert latitude and longitude to strings with precision
+
 	latStr := strconv.FormatFloat(latitude, 'f', 6, 64)
 	longStr := strconv.FormatFloat(longitude, 'f', 6, 64)
 
-	// Combine them into a room name
 	roomName := fmt.Sprintf("alert-room-%s-%s", latStr, longStr)
 
-	// Return the room name as a socket.Room
 	return socket.Room(roomName)
 }
 
-// func getLocationRoomName(latitude, longitude float64) socket.Room {
-// 	// Generate a unique room name based on the location
-// 	// e.g., using a geohash or combining latitude and longitude
-// 	return socket.Room(fmt.Sprintf("alert-room-%s-%s", latitude, longitude))
-// }
+func isMapEmpty(m *sync.Map) bool {
+	var empty bool
+	m.Range(func(_, _ interface{}) bool {
+		empty = false
+		return false
+	})
+	return empty
+}
