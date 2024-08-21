@@ -5,8 +5,10 @@ import (
 	"chookeye-core/lib"
 	"chookeye-core/schemas"
 	"chookeye-core/validators"
-	"github.com/gin-gonic/gin"
+	"fmt"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type createAlertRequest struct {
@@ -66,8 +68,62 @@ func CreateAlertHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"alert": alert})
 }
 
-func GetAlertsNearLocation(latitude, longitude float64, radius float64) ([]schemas.Alert, error) {
+func GetAlertsNearLocation2(latitude, longitude float64, radius float64) ([]schemas.Alert, error) {
 	var alerts []schemas.Alert
 	err := database.Store.Where("ST_Distance(location, ST_MakePoint(?, ?)) <= ?", latitude, longitude, radius).Find(&alerts).Error
+	return alerts, err
+}
+
+func GetAlertsNearLocation4(latitude, longitude float64, radius float64) ([]schemas.Alert, error) {
+	fmt.Println(latitude, longitude)
+	var alerts []schemas.Alert
+
+	// err := database.Store.Where(`
+	//        6371000 * acos(
+	//            cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
+	//            sin(radians(?)) * sin(radians(latitude))
+	//        ) <= ?
+	//    `, latitude, longitude, latitude, radius).Find(&alerts).Error
+	//
+
+	err := database.Store.Find(&alerts).Error
+
+	fmt.Printf("Retrieved %v alerts from database", len(alerts))
+
+	return alerts, err
+}
+
+func GetAlertsNearLocation(latitude, longitude float64, radius float64) ([]schemas.Alert, error) {
+	fmt.Println("Latitude:", latitude, "Longitude:", longitude)
+	var alerts []schemas.Alert
+
+	// Using the Haversine formula to calculate distance
+	err := database.Store.Where(`
+        6371000 * acos(
+            cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
+            sin(radians(?)) * sin(radians(latitude))
+        ) <= ?
+    `, latitude, longitude, latitude, radius).Find(&alerts).Error
+
+	if err != nil {
+		fmt.Println("Error retrieving alerts:", err)
+	}
+
+	fmt.Printf("Retrieved %v alerts from database", len(alerts))
+
+	return alerts, err
+}
+
+func GetAlertsNearLocation3(latitude, longitude float64, radius float64) ([]schemas.Alert, error) {
+	fmt.Println(latitude, longitude)
+	var alerts []schemas.Alert
+
+	//https://en.wikipedia.org/wiki/Haversine_formula
+
+	err := database.Store.Where(`
+		6371000 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))
+		<= ?
+	`, latitude, longitude, latitude, radius).Find(&alerts).Error
+
 	return alerts, err
 }

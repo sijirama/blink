@@ -1,0 +1,217 @@
+[
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3245,
+      "longitude": 4.6793
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3243,
+      "longitude": 4.6791
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3244,
+      "longitude": 4.6790
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3246,
+      "longitude": 4.6792
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3242,
+      "longitude": 4.6794
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3244,
+      "longitude": 4.6795
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3247,
+      "longitude": 4.6791
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3241,
+      "longitude": 4.6793
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3243,
+      "longitude": 4.6792
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3245,
+      "longitude": 4.6794
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3242,
+      "longitude": 4.6792
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3244,
+      "longitude": 4.6791
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3246,
+      "longitude": 4.6793
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3243,
+      "longitude": 4.6790
+    }
+  },
+  {
+    "content": "alert inside 100m",
+    "location": {
+      "latitude": 6.3245,
+      "longitude": 4.6792
+    }
+  }
+]
+
+
+[
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3250,
+      "longitude": 4.6800
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3235,
+      "longitude": 4.6780
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3260,
+      "longitude": 4.6785
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3230,
+      "longitude": 4.6795
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3255,
+      "longitude": 4.6775
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3265,
+      "longitude": 4.6805
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3225,
+      "longitude": 4.6788
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3258,
+      "longitude": 4.6802
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3268,
+      "longitude": 4.6770
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3238,
+      "longitude": 4.6810
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3270,
+      "longitude": 4.6795
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3220,
+      "longitude": 4.6778
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3275,
+      "longitude": 4.6800
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3260,
+      "longitude": 4.6765
+    }
+  },
+  {
+    "content": "alert outside 100m",
+    "location": {
+      "latitude": 6.3228,
+      "longitude": 4.6792
+    }
+  }
+]
+

@@ -2,6 +2,8 @@ package websocket
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/zishang520/socket.io/v2/socket"
 )
 
@@ -21,12 +23,12 @@ func handleSystemConnection(clients ...any) {
 }
 
 func handlePing(args ...any) {
-	fmt.Printf("Received 'ping' event from client: %s", client.Id())
-	client.Emit("pong", "pong")
+	log.Printf("Received 'ping' event from client: %s\n", client.Id())
+	client.Emit("pong", "pongyyyyyyyy")
 }
 
 func handleEcho(args ...any) {
-	fmt.Printf("Received 'echo' event from client: %s", client.Id())
+	log.Printf("Received 'echo' event from client: %s\n", client.Id())
 	client.Emit("echo_response", args...)
 }
 
