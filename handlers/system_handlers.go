@@ -1,10 +1,8 @@
 package handlers
 
 import (
-	//. "chookeye-core/database"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func Pong(x *gin.Context) {

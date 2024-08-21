@@ -4,11 +4,9 @@ import (
 	"chookeye-core/broadcast"
 	"chookeye-core/database"
 	"fmt"
+	"github.com/zishang520/socket.io/v2/socket"
 	"log"
 	"strconv"
-	"sync"
-
-	"github.com/zishang520/socket.io/v2/socket"
 )
 
 func registerAlertEventHandlers(io *socket.Server) {
@@ -85,23 +83,4 @@ func emitNearbyAlerts(client *socket.Socket, latitude, longitude, radius float64
 		}
 		fmt.Printf("Emitting alert: %v %v\n", alert.ID, alert.Title)
 	}
-}
-
-func getLocationRoomName(latitude, longitude float64) socket.Room {
-
-	latStr := strconv.FormatFloat(latitude, 'f', 6, 64)
-	longStr := strconv.FormatFloat(longitude, 'f', 6, 64)
-
-	roomName := fmt.Sprintf("alert-room-%s-%s", latStr, longStr)
-
-	return socket.Room(roomName)
-}
-
-func isMapEmpty(m *sync.Map) bool {
-	var empty bool
-	m.Range(func(_, _ interface{}) bool {
-		empty = false
-		return false
-	})
-	return empty
 }
