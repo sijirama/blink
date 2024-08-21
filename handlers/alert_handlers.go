@@ -88,7 +88,7 @@ func GetAlertsNearLocation4(latitude, longitude float64, radius float64) ([]sche
 
 	err := database.Store.Find(&alerts).Error
 
-	fmt.Printf("Retrieved %v alerts from database", len(alerts))
+	//fmt.Printf("Retrieved %v alerts from database", len(alerts))
 
 	return alerts, err
 }
@@ -105,11 +105,7 @@ func GetAlertsNearLocation(latitude, longitude float64, radius float64) ([]schem
         ) <= ?
     `, latitude, longitude, latitude, radius).Find(&alerts).Error
 
-	if err != nil {
-		fmt.Println("Error retrieving alerts:", err)
-	}
-
-	fmt.Printf("Retrieved %v alerts from database", len(alerts))
+	//fmt.Printf("Retrieved %v alerts from database", len(alerts))
 
 	return alerts, err
 }
