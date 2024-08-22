@@ -6,9 +6,11 @@ import (
 	"chookeye-core/lib"
 	"chookeye-core/schemas"
 	"chookeye-core/validators"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type createAlertRequest struct {
@@ -70,4 +72,21 @@ func CreateAlertHandler(c *gin.Context) {
 	broadcast.TriggerNewAlertFromBackend(alert.Location.Latitude, alert.Location.Longitude, radius, alert)
 
 	c.JSON(http.StatusCreated, gin.H{"alert": alert})
+}
+
+func GetAlertByIDHandler(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid alert ID"})
+		return
+	}
+
+	var alert schemas.Alert
+	if err := database.Store.First(&alert, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Alert not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"alert": alert})
 }

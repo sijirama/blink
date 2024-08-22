@@ -8,6 +8,7 @@ import (
 
 func AddAlertRoutes(r *gin.RouterGroup) {
 	alert := r.Group("/alert")
+	alert.GET("/:id", handlers.GetAlertByIDHandler)
 	{
 
 		alert.Use(middleware.AuthMiddleware())
