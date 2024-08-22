@@ -20,13 +20,5 @@ func ValidateUser(user *schemas.User) error {
 		return errors.New("invalid email format")
 	}
 
-	if user.Location.Latitude < -90 || user.Location.Latitude > 90 {
-		return errors.New("latitude must be between -90 and 90")
-	}
-
-	if user.Location.Longitude < -180 || user.Location.Longitude > 180 {
-		return errors.New("longitude must be between -180 and 180")
-	}
-
 	return nil
 }

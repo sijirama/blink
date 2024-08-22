@@ -26,6 +26,9 @@ func SetupRouter() *gin.Engine {
 	//pre processes
 	websocket.StartServer(route) //socket server
 
+	//attach "/api"
+	route = route.Group("/api")
+
 	//routes: routes created here
 	routes.AddAuthenticationRoutes(route)
 	routes.AddAlertRoutes(route)

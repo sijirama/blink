@@ -55,6 +55,13 @@ type SigninRequest struct {
 	Password string `json:"password" validate:"required,min=6"`
 }
 
+type UserResponse struct {
+	ID       uint             `json:"id"`
+	Email    string           `json:"email"`
+	Username string           `json:"username"`
+	Location schemas.Location `json:"location"`
+}
+
 func Signin(c *gin.Context) {
 	var request SigninRequest
 
@@ -90,8 +97,15 @@ func Signin(c *gin.Context) {
 		true,                          // httpOnly
 	)
 
+	userResponse := UserResponse{
+		ID:       user.ID,
+		Email:    user.Email,
+		Username: user.Username,
+		Location: user.Location,
+	}
+
 	//c.JSON(http.StatusOK, gin.H{"token": token})
-	c.JSON(http.StatusOK, gin.H{"message": "Successfully signed in"})
+	c.JSON(http.StatusOK, gin.H{"message": "Successfully signed in", "token": token, "user": userResponse})
 }
 
 //----------------------------------------------------------------------------------
