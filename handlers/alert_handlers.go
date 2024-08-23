@@ -90,3 +90,5 @@ func GetAlertByIDHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"alert": alert})
 }
+
+//NOTE: GetalertsNearLocation handler is in database/alerts.go to avoid import cycles

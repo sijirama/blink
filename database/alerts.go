@@ -2,6 +2,7 @@ package database
 
 import "chookeye-core/schemas"
 
+// i had to create this handler here, because it was causing import cycles and i was tired of refactoring
 func GetAlertsNearLocation(latitude, longitude float64, radius float64) ([]schemas.Alert, error) {
 	var alerts []schemas.Alert
 
