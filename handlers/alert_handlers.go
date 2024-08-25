@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -53,6 +54,10 @@ func CreateAlertHandler(c *gin.Context) {
 	urgency := lib.GenerateUrgencyFromContent(requestBody.Content)         // This is a placeholder function
 	radius := 1.0                                                          // 1 km radius
 
+	//expiry date logic
+	expirationDays := 2
+	expiresAt := time.Now().Add(time.Hour * 24 * time.Duration(expirationDays))
+
 	// Create the alert
 	alert := schemas.Alert{
 		UserID:      userID.(uint),
@@ -61,6 +66,7 @@ func CreateAlertHandler(c *gin.Context) {
 		Description: description,
 		Status:      "active", // Default status
 		Urgency:     urgency,
+		ExpiresAt:   expiresAt,
 	}
 
 	if err := database.Store.Create(&alert).Error; err != nil {
@@ -83,7 +89,7 @@ func GetAlertByIDHandler(c *gin.Context) {
 	}
 
 	var alert schemas.Alert
-	if err := database.Store.First(&alert, id).Error; err != nil {
+	if err := database.Store.Preload("Flags").First(&alert, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Alert not found"})
 		return
 	}

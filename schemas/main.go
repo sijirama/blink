@@ -31,9 +31,19 @@ type Alert struct {
 	Status        string         `gorm:"not null"` // e.g., "active", "resolved", etc.
 	Urgency       int            `gorm:"not null"` // e.g., 1-5 scale
 	Verifications []Verification `gorm:"foreignKey:AlertID"`
+	Flags         []Flag         `gorm:"foreignKey:AlertID"`
 	Comments      []Comment      `gorm:"foreignKey:AlertID"`
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
+	ExpiresAt     time.Time // Add this field
+}
+
+type Flag struct {
+	ID        uint   `gorm:"primaryKey"`
+	AlertID   uint   `gorm:"not null"`
+	UserID    uint   `gorm:"not null"`
+	Type      string `gorm:"type:varchar(20);not null"` // Store as string
+	CreatedAt time.Time
 }
 
 type Verification struct {
@@ -62,7 +72,7 @@ type Notification struct {
 }
 
 func CreateTables(db *gorm.DB) error {
-	err := db.AutoMigrate(&User{}, &Alert{}, &Verification{}, &Comment{}, &Notification{})
+	err := db.AutoMigrate(&User{}, &Alert{}, &Verification{}, &Comment{}, &Notification{}, &Flag{})
 	if err != nil {
 		return err
 	}

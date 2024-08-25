@@ -32,6 +32,7 @@ func SetupRouter() *gin.Engine {
 	//routes: routes created here
 	routes.AddAuthenticationRoutes(route)
 	routes.AddAlertRoutes(route)
+	routes.AddFlagRoutes(route)
 
 	return router
 }

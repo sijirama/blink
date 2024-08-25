@@ -16,7 +16,15 @@ func registerAlertEventHandlers(io *socket.Server) {
 func handleAlertConnection(clients ...any) {
 	alertClient := clients[0].(*socket.Socket)
 
+	alertClient.On("join_chookeye", func(args ...any) {
+		handleChookeye(alertClient, args...)
+	})
+
 	alertClient.On("join_alert_room", func(args ...any) {
+		handleJoinAlertRoom(alertClient, args...)
+	})
+
+	alertClient.On("leave_alert_room", func(args ...any) {
 		handleJoinAlertRoom(alertClient, args...)
 	})
 
@@ -25,7 +33,20 @@ func handleAlertConnection(clients ...any) {
 	})
 }
 
-func handleJoinAlertRoom(client *socket.Socket, args ...any) {
+func handleJoinAlertRoom(alertClient *socket.Socket, args ...any) {
+	fmt.Printf("Number of args is %s", len(args))
+	alertId := args[0]
+	log.Printf(`WTFFFFFFFFFF: client %s is joining alert-%v`, alertClient.Id(), alertId)
+	alertClient.Join(socket.Room(fmt.Sprintf(`alert-%v`, alertId)))
+}
+
+func handleLeaveAlertRoom(alertClient *socket.Socket, args ...any) {
+	alertId := args[0]
+	log.Printf(`client %s is leaving alert room %s`, alertClient.Id(), alertId)
+	alertClient.Leave(socket.Room(fmt.Sprintf(`alert-%s`, alertId)))
+}
+
+func handleChookeye(client *socket.Socket, args ...any) {
 
 	latitudeStr := args[0].(string)
 	longitudeStr := args[1].(string)
