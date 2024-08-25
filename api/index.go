@@ -33,6 +33,7 @@ func SetupRouter() *gin.Engine {
 	routes.AddAuthenticationRoutes(route)
 	routes.AddAlertRoutes(route)
 	routes.AddFlagRoutes(route)
+	routes.AddUserRoutes(route)
 
 	return router
 }
