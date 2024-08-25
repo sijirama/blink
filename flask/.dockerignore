@@ -1,0 +1,64 @@
+# Python files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment and build files
+.env
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Package manager files
+Pipfile
+Pipfile.lock
+poetry.lock
+
+# Distribution / packaging
+build/
+dist/
+.eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs and local files
+*.log
+*.pot
+*.mo
+*.log
+*.dat
+*.csv
+*.sqlite
+*.db
+
+# Unit test / coverage reports
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+htmlcov/
+.coverage
+.pytest_cache/
+.coverage.*
+
+# Flask specific
+instance/
+.webassets-cache
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Docker and development files
+.dockerignore
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+
+# IDE files
+.idea/
+.vscode/
+

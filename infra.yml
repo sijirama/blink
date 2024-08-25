@@ -1,4 +1,20 @@
 services:
+  
+  flask:
+    build:
+      context: ./flask
+      dockerfile: flask.Dockerfile
+    container_name: flask
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./flask:/app
+
   redis:
     image: redis:alpine
     ports:
