@@ -18,7 +18,7 @@ def process_alert(content):
     is_alert_response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
-            {"role": "system", "content": "You are an AI that determines if a given text describes a dangerous situation that requires an alert. Respond with 1 for yes or 0 for no, you should know that the alert can be written in other languages, so try and understand it in the other language if it is not in english"},
+            {"role": "system", "content": "You are an AI that determines if a given text describes a dangerous situation that requires an alert. Respond with 1 for yes or 0 for no, you should know that the alert can be written in other languages, so try and understand it in the other language if it is not in english, please remember, it is only an alert if it can cause substantial harm to the person and others in the area, we don't want insignicant alerts like, my laptop battery exploded, or my window broke, no, we don't really want that, something that is worth getting external help for"},
             {"role": "user", "content": content}
         ]
     )
@@ -52,7 +52,7 @@ def process_alert(content):
     urgency_response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
-            {"role": "system", "content": "Rate the urgency of the following situation on a scale of 1-10, where 10 is most urgent. Respond with only the number, the scale means how bad should people be scared aout this with a mix of should this be reported to the police."},
+            {"role": "system", "content": "Rate the urgency of the following situation on a scale of 1-10, where 10 is most urgent. Respond with only the number, the scale means how bad should people be scared aout this with a mix of should this be reported to the police. if it should be reported to the police it should be greater than 7, pls be stingy with this, if an alert causes small harm to the user, then it should be just about a 7, be very stingy with this, only crazy alerts should be above 7, not many should even reach 10"},
             {"role": "user", "content": translated_content}
         ]
     )
