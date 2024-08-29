@@ -19,10 +19,18 @@ type ClientLocation struct {
 }
 
 func TriggerNewAlertFromBackend(latitude, longitude, radius float64, alertData schemas.Alert) {
-	BroadcastAlertToNearbyClients(latitude, longitude, radius, alertData)
+	go func() {
+		broadcastAlertToNearbyClients(latitude, longitude, radius, alertData)
+	}()
 }
 
-func BroadcastAlertToNearbyClients(latitude, longitude, radius float64, alertData schemas.Alert) {
+func TriggerAlertChange(alert schemas.Alert) {
+	go func() {
+		broadcastAlertToNearbyClients(alert.Location.Latitude, alert.Location.Longitude, 1.0, alert)
+	}()
+}
+
+func broadcastAlertToNearbyClients(latitude, longitude, radius float64, alertData schemas.Alert) {
 	clients.Range(func(key, value any) bool {
 		location := value.(ClientLocation)
 

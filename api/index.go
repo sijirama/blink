@@ -1,6 +1,7 @@
 package api
 
 import (
+	"chookeye-core/cron"
 	"chookeye-core/routes"
 	"chookeye-core/websocket"
 
@@ -25,6 +26,7 @@ func SetupRouter() *gin.Engine {
 
 	//pre processes
 	websocket.StartServer(route) //socket server
+	cron.InitializeCronServer()  //cron server
 
 	//attach "/api"
 	route = route.Group("/api")

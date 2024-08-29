@@ -8,7 +8,7 @@ WORKDIR /app
 RUN go install github.com/air-verse/air@latest
 
 # Install Go
-RUN apk add --no-cache gcc musl-dev
+RUN apk add --no-cache gcc musl-dev make cmake
 
 COPY go.mod ./
 RUN go mod download

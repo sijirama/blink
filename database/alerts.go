@@ -8,7 +8,7 @@ func GetAlertsNearLocation(latitude, longitude float64, radius float64) ([]schem
 
 	//https://en.wikipedia.org/wiki/Haversine_formula
 
-	err := Store.Where(`
+	err := Store.Where("status = ?", "active").Where(`
         6371000 * acos(
             cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
             sin(radians(?)) * sin(radians(latitude))

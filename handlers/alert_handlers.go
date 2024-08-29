@@ -8,12 +8,11 @@ import (
 	"chookeye-core/validators"
 	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 func GetAlertByIDHandler(c *gin.Context) {
@@ -111,7 +110,7 @@ func CreateAlertHandler(c *gin.Context) {
 			}
 		}
 	} else {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	// Expiry date logic

@@ -4,9 +4,10 @@ import (
 	"chookeye-core/broadcast"
 	"chookeye-core/database"
 	"fmt"
-	"github.com/zishang520/socket.io/v2/socket"
 	"log"
 	"strconv"
+
+	"github.com/zishang520/socket.io/v2/socket"
 )
 
 func registerAlertEventHandlers(io *socket.Server) {
@@ -51,7 +52,7 @@ func handleChookeye(client *socket.Socket, args ...any) {
 	latitudeStr := args[0].(string)
 	longitudeStr := args[1].(string)
 	radiusStr := args[2].(string)
-	fmt.Println(latitudeStr, longitudeStr, radiusStr)
+	fmt.Println(latitudeStr, longitudeStr)
 
 	latitude, err := strconv.ParseFloat(latitudeStr, 64)
 	if err != nil {
@@ -77,9 +78,10 @@ func handleChookeye(client *socket.Socket, args ...any) {
 		Radius:    radius,
 		Socket:    client,
 	}
-	broadcast.RegisterClient(string(client.Id()), clientLocation)
 
 	log.Printf("Client %s joined alert room at location: %v\n", client.Id(), clientLocation)
+
+	broadcast.RegisterClient(string(client.Id()), clientLocation)
 
 	emitNearbyAlerts(client, latitude, longitude, radius)
 }

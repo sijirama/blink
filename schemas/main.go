@@ -23,19 +23,18 @@ type User struct {
 }
 
 type Alert struct {
-	ID            uint           `gorm:"primaryKey"`
-	UserID        uint           `gorm:"not null"`
-	Location      Location       `gorm:"embedded"`
-	Title         string         `gorm:"not null"`
-	Description   string         `gorm:"not null"`
-	Status        string         `gorm:"not null"` // e.g., "active", "resolved", etc.
-	Urgency       int            `gorm:"not null"` // e.g., 1-5 scale
-	Verifications []Verification `gorm:"foreignKey:AlertID"`
-	Flags         []Flag         `gorm:"foreignKey:AlertID"`
-	Comments      []Comment      `gorm:"foreignKey:AlertID"`
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-	ExpiresAt     time.Time // Add this field
+	ID          uint      `gorm:"primaryKey"`
+	UserID      uint      `gorm:"not null"`
+	Location    Location  `gorm:"embedded"`
+	Title       string    `gorm:"not null"`
+	Description string    `gorm:"not null"`
+	Status      string    `gorm:"not null"` // e.g., "active", "archived", etc.
+	Urgency     int       `gorm:"not null"` // e.g., 1-5 scale
+	Flags       []Flag    `gorm:"foreignKey:AlertID"`
+	Comments    []Comment `gorm:"foreignKey:AlertID"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	ExpiresAt   time.Time // Add this field
 }
 
 type Flag struct {
@@ -43,13 +42,6 @@ type Flag struct {
 	AlertID   uint   `gorm:"not null"`
 	UserID    uint   `gorm:"not null"`
 	Type      string `gorm:"type:varchar(20);not null"` // Store as string
-	CreatedAt time.Time
-}
-
-type Verification struct {
-	ID        uint `gorm:"primaryKey"`
-	AlertID   uint `gorm:"not null"`
-	UserID    uint `gorm:"not null"`
 	CreatedAt time.Time
 }
 
@@ -72,10 +64,10 @@ type Notification struct {
 }
 
 func CreateTables(db *gorm.DB) error {
-	err := db.AutoMigrate(&User{}, &Alert{}, &Verification{}, &Comment{}, &Notification{}, &Flag{})
+	err := db.AutoMigrate(&User{}, &Alert{}, &Comment{}, &Notification{}, &Flag{})
+
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
