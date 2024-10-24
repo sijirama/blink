@@ -5,5 +5,5 @@ it's chill, i'm back on it now, i was away, i wanna finish an mvp soon and host 
 
 
 #### 1st iteration
-![Image description](../assets/1.1.png)
-![Image description](../assets/1.2.png)
+![Image description](./assets/1.1.png)
+![Image description](./assets/1.2.png)
