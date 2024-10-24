@@ -18,6 +18,7 @@ import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 import { toast } from 'sonner';
 import { socket } from '@/lib/socket';
+import { useInterface } from '@/store/interface';
 
 interface ReportCardProps {
     id?: number;
@@ -47,6 +48,7 @@ const ReportCard = React.memo(({ id }: ReportCardProps) => {
     const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
     const isAuthenticated = useIsAuthenticated();
     const { user }: any = useAuthUser();
+    const { onOpen } = useInterface()
 
     const fetchAlert = useCallback(async () => {
         if (id) {
@@ -175,7 +177,7 @@ const ReportCard = React.memo(({ id }: ReportCardProps) => {
                     <h2 className="text-lg font-bold text-gray-800 mb-1">{alert.Title}</h2>
                     <div className="flex items-center">
                         <AlertTriangle className={`${urgencyColor} text-xl mr-2`} />
-                        <Badge variant="outline" className={`${urgencyColor} border-current`}>
+                        <Badge variant="outline" className={`${urgencyColor} border-current text-xs`}>
                             Urgency: {alert.Urgency}/10
                         </Badge>
                     </div>
@@ -213,7 +215,7 @@ const ReportCard = React.memo(({ id }: ReportCardProps) => {
                 )}
             </div>
 
-            <div className="flex items-center justify-between text-sm text-gray-500 border-t border-gray-200 pt-3">
+            <div className="flex items-center justify-between text-xs text-gray-500 border-t border-gray-200 pt-3">
                 <div className="flex items-center space-x-2">
                     <ThumbsUp className="w-4 h-4" />
                     <span>{alert.Flags.filter((flag) => flag.Type == "Verify")?.length || 0} Verification(s)</span>
@@ -221,6 +223,7 @@ const ReportCard = React.memo(({ id }: ReportCardProps) => {
                 <div className="flex items-center space-x-2">
                     <Badge variant="secondary">{alert.Status}</Badge>
                 </div>
+                <Button variant={"outline"} className='text-xs' onClick={() => onOpen("alertComments", { alertId: alert.ID })}>Open comments</Button>
             </div>
 
             {isAuthenticated && (

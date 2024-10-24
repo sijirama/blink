@@ -5,6 +5,7 @@ import SignUpFormModal from "@/components/modals/SignUp";
 import AlertSheet from "@/components/modals/alertsSheet";
 import ReportAlert from "@/components/modals/ReportAlert";
 import ReportCardModal from "@/components/modals/ReportCardModal";
+import AlertMessageSheet from "@/components/modals/AlertMessageSheet";
 
 export function InterfaceProvider() {
     const [isMounted, setIsMounted] = useState(false);
@@ -24,6 +25,7 @@ export function InterfaceProvider() {
             <AlertSheet />
             <ReportAlert />
             <ReportCardModal />
+            <AlertMessageSheet />
         </>
     );
 }

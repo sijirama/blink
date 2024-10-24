@@ -13,19 +13,24 @@ function App() {
     const radius = 1000000
 
     useEffect(() => {
+
         socket.connect();
+
         socket.on("connect", () => {
             console.log('Connected to socket server');
             if (coords) {
                 joinAlertRoom(coords.latitude, coords.longitude, radius);
             }
         });
+
         socket.on("alert", (data: Alert) => {
             addAlert(data);
         });
+
         socket.on('disconnect', () => {
             console.log('Disconnected from socket server');
         });
+
         return () => {
             socket.off("connect");
             socket.off("alert");
@@ -45,7 +50,7 @@ function App() {
         <main className="font-poppins">
             <FloatingMenu />
             <MapComponent />
-         </main>
+        </main>
     );
 }
 

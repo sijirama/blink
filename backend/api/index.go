@@ -4,7 +4,6 @@ import (
 	"chookeye-core/cron"
 	"chookeye-core/routes"
 	"chookeye-core/websocket"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -36,6 +35,7 @@ func SetupRouter() *gin.Engine {
 	routes.AddAlertRoutes(route)
 	routes.AddFlagRoutes(route)
 	routes.AddUserRoutes(route)
+	routes.AddCommentRoutes(route)
 
 	return router
 }

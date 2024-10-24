@@ -41,9 +41,9 @@ export const AlertCard: React.FC<{ alert: Alert }> = ({ alert }) => {
             className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6 border border-gray-200 font-poppins"
         >
             <div className="flex flex-col sm:flex-row justify-between items-start mb-4">
-                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 sm:mb-0">{alert.Title}</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2 sm:mb-0">{alert.Title}</h3>
                 <div className="flex items-center">
-                    <span className=" text-xs text-gray-500 mr-2">Status:</span>
+                    <span className=" text-xs text-gray-500 mr-2 hidden">Status:</span>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${alert.Status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                         }`}>
                         {alert.Status}
@@ -76,20 +76,20 @@ export const AlertCard: React.FC<{ alert: Alert }> = ({ alert }) => {
             <div className="flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0">
                 <div className="flex items-center">
                     <FaMapMarkerAlt className="text-gray-400 mr-2" />
-                    <span className=" text-xs lg:text-sm text-gray-600">
+                    <span className=" text-xs text-gray-600">
                         {distance != null ? `${distance.toFixed(1)} km from you` : 'Distance unavailable'}
                     </span>
                 </div>
 
                 <div className="flex items-center">
                     <FaClock className="text-gray-400 mr-2" />
-                    <span className=" text-xs lg:text-sm text-gray-500">
+                    <span className=" text-xs  text-gray-500">
                         Created: {new Date(alert.CreatedAt).toLocaleDateString()}
                     </span>
                 </div>
             </div>
 
-            <div className="mt-4 flex justify-between items-center  text-xs lg:text-sm text-gray-500">
+            <div className="mt-4 flex justify-between items-center  text-xs text-gray-500">
                 <div className="flex items-center">
                     <FaExclamationTriangle className="text-gray-400 mr-2" />
                     <span>Urgency:</span>

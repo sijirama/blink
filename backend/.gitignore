@@ -9,6 +9,7 @@
 *.dll
 *.so
 *.dylib
+blink
 
 # Logs and debugging files
 *.log

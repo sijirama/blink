@@ -104,6 +104,6 @@ func emitNearbyAlerts(client *socket.Socket, latitude, longitude, radius float64
 			log.Println("Error emitting alerts:", err.Error())
 			continue
 		}
-		fmt.Printf("Emitting alert: %v %v\n", alert.ID, alert.Title)
+		//fmt.Printf("Emitting alert: %v %v\n", alert.ID, alert.Title)
 	}
 }

@@ -8,6 +8,7 @@ export type InterfaceType =
     | 'alertSheet'
     | 'reportAlert'
     | 'reportCard'
+    | 'alertComments'
 
 export interface InterfaceDataType {
     // creator?: User | null;
