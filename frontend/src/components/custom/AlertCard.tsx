@@ -4,6 +4,7 @@ import { Alert } from '@/types/alert';
 import { useGeolocated } from "react-geolocated";
 import { FaMapMarkerAlt, FaChevronDown, FaChevronUp, FaClock, FaExclamationTriangle } from 'react-icons/fa';
 import { useInterface } from '@/store/interface';
+import Markdown from 'react-markdown';
 
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
     const R = 6371; // Radius of the Earth in km
@@ -53,7 +54,9 @@ export const AlertCard: React.FC<{ alert: Alert }> = ({ alert }) => {
 
             <div className="mb-4">
                 <p className={`text-sm text-gray-600 ${expanded ? '' : 'line-clamp-2'}`}>
-                    {alert.Description}
+                    <Markdown>
+                        {alert.Description}
+                    </Markdown>
                 </p>
                 <button
                     onClick={() => setExpanded(!expanded)}
