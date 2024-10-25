@@ -18,8 +18,8 @@ const AlertMarker = ({ alert }: MarkerProps) => {
                 onClick={() => onOpen("reportCard", { alertId: alert.ID })}
                 className="pulse-circle"
                 style={{
-                    width: `${radiusInPixels * 2}px`,
-                    height: `${radiusInPixels * 2}px`,
+                    width: `${radiusInPixels * 0.8}px`,
+                    height: `${radiusInPixels * 0.8}px`,
                     marginLeft: `-${radiusInPixels}px`, // Center the circle
                     marginTop: `-${radiusInPixels}px`,
                 }}

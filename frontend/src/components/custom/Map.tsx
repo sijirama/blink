@@ -1,9 +1,6 @@
 import Map, { GeolocateControl, Marker, NavigationControl } from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-
 import { useLocationStore } from '@/store/location';
 import useAlertStore from '@/store/alert';
-
 import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 import { avatarImageUrl } from '@/lib/avatar';
 import { User } from '@/types';
@@ -11,7 +8,9 @@ import { socket } from '@/lib/socket';
 import { useMemo } from 'react';
 import AlertMarker from './AlertMarker';
 
-const MapBoxSiji = "mapbox://styles/sijiramakun/cm04mgec700ej01qtc1ekexg4"
+import 'mapbox-gl/dist/mapbox-gl.css';
+//const MapBoxSiji = "mapbox://styles/sijiramakun/cm04mgec700ej01qtc1ekexg4"
+const MapBoxSiji = "mapbox://styles/mapbox/standard"
 
 export default function MapComponent() {
     const { coords } = useLocationStore();
@@ -42,7 +41,8 @@ export default function MapComponent() {
                 initialViewState={{
                     longitude: coords?.longitude,
                     latitude: coords?.latitude,
-                    zoom: 15
+                    zoom: 18,
+                    pitch: 70,
                 }}
                 onClick={handleMapClick}
                 style={{ width: "100%", height: "100vh" }}
