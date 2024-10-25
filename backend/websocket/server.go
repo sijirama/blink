@@ -39,5 +39,6 @@ func StartServer(route *gin.RouterGroup) {
 func registerEventHandlers(io *socket.Server) {
 	registerSystemEventHandlers(io)
 	registerAlertEventHandlers(io)
+	registerCommentEventHandlers(io)
 	// Register other event handlers here
 }

@@ -7,9 +7,9 @@ import {
 } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { socket } from "@/lib/socket"
-import { MessageCircle, Send, X, Clock, User } from "lucide-react"
+import { Send, X, Clock, User } from "lucide-react"
 import axios from "axios"
 import { Comment } from "@/types/comment"
 
@@ -21,23 +21,45 @@ export default function AlertMessageSheet() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const { alertId } = data
 
-    useEffect(() => {
-        if (open && socket.connected) {
-            // Initial fetch of comments
-            fetchComments()
+    const chatEndRef = useRef<HTMLDivElement | null>(null)
 
-            // Set up socket listener for new comments
-            socket.on(`comments-${alertId}`, (comment) => {
-                setComments(prev => [...prev, comment])
-            })
+    useEffect(() => {
+        console.log(open, socket.connected, alertId)
+        // Initial fetch of comments
+        fetchComments()
+
+
+        // Emit event to join the comment room
+        // socket.emit('join_comment_room', alertId, (response: any) => {
+        //     if (response?.error) {
+        //         console.error(`Failed to join room ${alertId}:`, response.error);
+        //     }
+        // });
+        //
+        // socket.on('joined_comment_room', (data) => {
+        //     console.log(`Successfully fucking joined ${data.room}`);
+        // });
+
+        socket.on(`comments-${alertId}`, (comment) => {
+            console.log("WE GOT THIS SHIT NOW: ", comment)
+            setComments(prev => [...prev, comment])
+            if (comment.error) {
+                console.error("Failed to add comment:", comment.error)
+                setIsSubmitting(false)
+            }
+        })
+
+        if (open) {
         }
 
         return () => {
-            if (socket.connected) {
-                socket.off(`comments-${alertId}`)
-            }
+            socket.off(`comments-${alertId}`)
         }
     }, [open, alertId])
+
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }, [comments])
 
     const fetchComments = async () => {
         try {
@@ -76,12 +98,11 @@ export default function AlertMessageSheet() {
 
     return (
         <Sheet open={open} onOpenChange={onClose}>
-            <SheetContent className="w-[400px] sm:w-[540px] h-full flex flex-col">
+            <SheetContent className="w-[400px] sm:w-[640px] h-full flex flex-col">
                 <SheetHeader className="border-b pb-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <MessageCircle className="h-5 w-5 text-blue-500" />
-                            <SheetTitle>Alert Comments for {alertId}</SheetTitle>
+                            <SheetTitle>Comments</SheetTitle>
                         </div>
                         <button
                             onClick={onClose}
@@ -117,6 +138,8 @@ export default function AlertMessageSheet() {
                             </p>
                         </div>
                     ))}
+                    {/* Empty div to scroll to */}
+                    <div ref={chatEndRef}></div>
                 </div>
 
                 <form

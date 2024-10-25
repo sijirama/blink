@@ -3,6 +3,7 @@ package handlers
 import (
 	"chookeye-core/database"
 	"chookeye-core/schemas"
+	"chookeye-core/websocket"
 	"net/http"
 	"strconv"
 	"time"
@@ -84,5 +85,6 @@ func CreateCommentHandler(c *gin.Context) {
 	}
 
 	//TODO: broadcast new comment to all connected members of that chat
+	websocket.BroadcastNewComment(alert.ID, comment)
 	c.JSON(http.StatusCreated, comment)
 }
