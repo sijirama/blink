@@ -19,6 +19,7 @@ import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 import { toast } from 'sonner';
 import { socket } from '@/lib/socket';
 import { useInterface } from '@/store/interface';
+import Markdown from 'react-markdown'
 
 interface ReportCardProps {
     id?: number;
@@ -130,9 +131,14 @@ const ReportCard = React.memo(({ id }: ReportCardProps) => {
 
     const formatDescription = (description: string) => {
         return description.split('\n').map((line, index) => (
-            <React.Fragment key={index}>
-                {line.trim()}
-                {index < description.split('\n').length - 1 && <br />}
+            <React.Fragment key={index} >
+                <Markdown>
+                    {line.trim()}
+                </Markdown>
+                {/*index < description.split('\n').length - 1 && <br />
+                    WARN: i'm really not sure what this line does
+                    */}
+                {index < description.split('\n').length - 1}
             </React.Fragment>
         ));
     };
@@ -171,8 +177,8 @@ const ReportCard = React.memo(({ id }: ReportCardProps) => {
     const formattedDate = moment(alert.CreatedAt).format('Do [of] MMM [around] h:mm A');
 
     return (
-        <div className="p-4 font-poppins">
-            <div className="mb-3">
+        <div className="p-2 font-poppins">
+            <div className="mb-3 space-y-2">
                 <div className="mb-2">
                     <h2 className="text-lg font-bold text-gray-800 mb-1">{alert.Title}</h2>
                     <div className="flex items-center">
@@ -182,19 +188,19 @@ const ReportCard = React.memo(({ id }: ReportCardProps) => {
                         </Badge>
                     </div>
                 </div>
-                <p className="flex items-center space-x-1 text-sm text-gray-600">
+                <p className="flex items-center space-x-1 text-xs text-gray-600">
                     <MapPin className="w-4 h-4" />
                     <span>
                         {alert.Location.Latitude.toFixed(4)}, {alert.Location.Longitude.toFixed(4)}
                     </span>
                 </p>
-            </div>
-
-            <div className="mb-4">
-                <p className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+                <p className="flex items-center space-x-1 text-xs text-gray-500 mb-2">
                     <Clock className="w-4 h-4" />
                     <span>Reported {formattedDate}</span>
                 </p>
+            </div>
+
+            <div className="mb-4">
                 <div className="text-gray-700 text-sm">
                     {isDescriptionExpanded
                         ? formatDescription(alert.Description)
