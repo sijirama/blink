@@ -1,3 +1,5 @@
+import { User } from ".";
+
 export type Comment = {
     ID: string;
     AlertID: number;
@@ -5,5 +7,6 @@ export type Comment = {
     Content: string;
     CreatedAt: string;
     UpdatedAt: string;
+    User?: User
 };
 

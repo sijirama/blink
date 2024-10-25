@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type CommentWithUser struct {
@@ -32,7 +33,9 @@ func GetComentsByIdHandler(c *gin.Context) {
 	}
 
 	var comments []schemas.Comment
-	if err := database.Store.Preload("User").Where("alert_id = ?", id).Find(&comments).Error; err != nil {
+	if err := database.Store.Preload("User", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id, username") //NOTE: add more fields to include in user
+	}).Limit(30).Where("alert_id = ?", id).Find(&comments).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch comments"})
 		return
 	}
@@ -84,12 +87,20 @@ func CreateCommentHandler(c *gin.Context) {
 	comment.UpdatedAt = time.Now()
 
 	// Save comment to database
-	if err := database.Store.Preload("User").Create(&comment).Error; err != nil {
+	if err := database.Store.Create(&comment).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create comment"})
 		return
 	}
 
+	var commentt schemas.Comment
+	if err := database.Store.Preload("User", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id, username") //NOTE: add more fields to include in user
+	}).Where("id = ?", comment.ID).Find(&commentt).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch comments"})
+		return
+	}
+
 	//TODO: broadcast new comment to all connected members of that chat
-	websocket.BroadcastNewComment(alert.ID, comment)
-	c.JSON(http.StatusCreated, comment)
+	websocket.BroadcastNewComment(alert.ID, commentt)
+	c.JSON(http.StatusCreated, commentt)
 }

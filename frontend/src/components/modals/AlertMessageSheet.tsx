@@ -9,9 +9,10 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useEffect, useRef, useState } from "react"
 import { socket } from "@/lib/socket"
-import { Send, X, Clock, User } from "lucide-react"
+import { Send, X } from "lucide-react"
 import axios from "axios"
 import { Comment } from "@/types/comment"
+import { avatarImageUrl } from "@/lib/avatar"
 
 export default function AlertMessageSheet() {
     const { type, data, onClose, isOpen } = useInterface()
@@ -24,7 +25,6 @@ export default function AlertMessageSheet() {
     const chatEndRef = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
-        console.log(open, socket.connected, alertId)
         // Initial fetch of comments
         fetchComments()
 
@@ -113,21 +113,30 @@ export default function AlertMessageSheet() {
                     </div>
                 </SheetHeader>
 
-                <div className="flex-1 overflow-y-auto py-4 space-y-4">
+                <div className="flex-1 overflow-y-auto py-4 space-y-4 hide-scrollbar">
                     {comments.map((comment) => (
                         <div
                             key={comment.ID}
-                            className="bg-gray-50 rounded-lg p-4 space-y-2"
+                            className="bg-gray-100 rounded-lg p-4 space-y-2"
                         >
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <User className="h-4 w-4 text-gray-500" />
-                                    <span className="font-medium text-sm">
-                                        User {comment.UserID}
+                                <div className="flex items-center gap-1">
+                                    {
+                                        comment.User && (
+                                            <div
+                                                className={`cursor-pointer rounded-full w-7 h-7 bg-center bg-cover bg-no-repeat`}
+                                                style={{
+                                                    backgroundImage: `url(${avatarImageUrl(comment?.User)})`,
+                                                }}
+                                                aria-label="User menu"
+                                            />
+                                        )
+                                    }
+                                    <span className="font-base text-sm">
+                                        {(comment as any).User.Username}
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-1 text-gray-500">
-                                    <Clock className="h-4 w-4" />
                                     <span className="text-xs">
                                         {formatDate(comment.CreatedAt)}
                                     </span>
