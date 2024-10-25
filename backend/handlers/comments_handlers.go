@@ -11,6 +11,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type CommentWithUser struct {
+	User            schemas.User `json:"user"`
+	schemas.Comment `json:"comment"`
+}
+
 func GetComentsByIdHandler(c *gin.Context) {
 
 	idStr := c.Param("id")
@@ -27,7 +32,7 @@ func GetComentsByIdHandler(c *gin.Context) {
 	}
 
 	var comments []schemas.Comment
-	if err := database.Store.Where("alert_id = ?", id).Find(&comments).Error; err != nil {
+	if err := database.Store.Preload("User").Where("alert_id = ?", id).Find(&comments).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch comments"})
 		return
 	}
@@ -79,7 +84,7 @@ func CreateCommentHandler(c *gin.Context) {
 	comment.UpdatedAt = time.Now()
 
 	// Save comment to database
-	if err := database.Store.Create(&comment).Error; err != nil {
+	if err := database.Store.Preload("User").Create(&comment).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create comment"})
 		return
 	}

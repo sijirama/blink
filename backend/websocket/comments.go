@@ -55,21 +55,8 @@ func BroadcastNewComment(alertID uint, comment schemas.Comment) {
 		return
 	}
 
-	// Create a response object with necessary information
-	// commentResponse := schemas.Comment{
-	// 	ID:        comment.ID,
-	// 	Content:   comment.Content,
-	// 	CreatedAt: comment.CreatedAt,
-	// 	UserID:    comment.UserID,
-	// }
-
-	// log.Printf("Broadcasting new comment straight from abi to room: %s, socket: %v", roomName, commentServer)
-	//
-	// if commentServer != nil {
-	// 	//return
-	// }
-
 	roomName := fmt.Sprintf("comments-%v", alertID)
+
 	room := socket.Room(roomName)
 
 	fmt.Printf("%v %v %v \n", commentServer.Id(), room, roomName)

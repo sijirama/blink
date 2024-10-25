@@ -18,6 +18,7 @@ type User struct {
 	Location      Location       `gorm:"embedded"`
 	Alerts        []Alert        `gorm:"foreignKey:UserID"`
 	Notifications []Notification `gorm:"foreignKey:UserID"`
+	Comments      []Comment      `gorm:"foreignKey:UserID"`
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
@@ -49,6 +50,7 @@ type Comment struct {
 	ID        uint   `gorm:"primaryKey"`
 	AlertID   uint   `gorm:"not null"`
 	UserID    uint   `gorm:"not null"`
+	User      User   `gorm:"foreignKey:UserID"`
 	Content   string `gorm:"not null"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
