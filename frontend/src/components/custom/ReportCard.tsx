@@ -22,8 +22,9 @@ import { useInterface } from '@/store/interface';
 import Markdown from 'react-markdown'
 
 interface ReportCardProps {
-    id?: number;
-    open?: boolean;
+    id: number;
+    open: boolean;
+    onClose: () => void
 }
 
 const fetchAlertData = async (alertId: number): Promise<AlertType | null> => {
@@ -51,6 +52,7 @@ const ReportCard = React.memo(({ id }: ReportCardProps) => {
     const { user }: any = useAuthUser();
     const { onOpen } = useInterface()
 
+
     const fetchAlert = useCallback(async () => {
         if (id) {
             setLoading(true);
@@ -71,7 +73,9 @@ const ReportCard = React.memo(({ id }: ReportCardProps) => {
         }
     }, [id, user]);
 
+
     useEffect(() => {
+
         fetchAlert();
 
         if (id && socket.connected) {

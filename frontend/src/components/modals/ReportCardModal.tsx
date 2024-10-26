@@ -18,16 +18,24 @@ import { useInterface } from '@/store/interface';
 import { useEffect, useState } from 'react';
 import ReportCard from '../custom/ReportCard';
 import { useMediaQuery } from "@react-hook/media-query";
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
+import { toast } from "sonner";
 
 export default function ReportCardModal() {
-    const { type, isOpen, data, onClose } = useInterface();
+    const { type, isOpen, data, onClose, onOpen } = useInterface();
     const open = isOpen && type === "reportCard";
     const { alertId } = data;
     const [reportCardOpen, setReportCardOpen] = useState(false);
     const isDesktop = useMediaQuery("(min-width: 768px)");
+    const isAuthenticated = useIsAuthenticated();
 
     useEffect(() => {
         if (open && alertId) {
+            if (!isAuthenticated) {
+                toast.error("You must be authenticated")
+                onOpen("signInForm")
+                return;  // Prevent opening the report card if user is not authenticated.
+            }
             setReportCardOpen(true);
         } else {
             setReportCardOpen(false);
@@ -46,7 +54,7 @@ export default function ReportCardModal() {
                     <DialogHeader>
                         <DialogDescription></DialogDescription>
                     </DialogHeader>
-                    {reportCardOpen && <ReportCard id={alertId} open={reportCardOpen} />}
+                    {reportCardOpen && <ReportCard onClose={onClose} id={alertId} open={reportCardOpen} />}
                 </DialogContent>
             </Dialog>
         );
@@ -59,7 +67,7 @@ export default function ReportCardModal() {
                     <DrawerHeader className="text-left">
                         <DrawerDescription></DrawerDescription>
                     </DrawerHeader>
-                    {reportCardOpen && <ReportCard id={alertId} open={reportCardOpen} />}
+                    {reportCardOpen && <ReportCard onClose={onClose} id={alertId} open={reportCardOpen} />}
                 </div>
             </DrawerContent>
         </Drawer>

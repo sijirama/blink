@@ -25,8 +25,7 @@ export default function AlertMessageSheet() {
     const chatEndRef = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
-        // Initial fetch of comments
-        fetchComments()
+
 
 
         // Emit event to join the comment room
@@ -40,16 +39,15 @@ export default function AlertMessageSheet() {
         //     console.log(`Successfully fucking joined ${data.room}`);
         // });
 
-        socket.on(`comments-${alertId}`, (comment) => {
-            console.log("WE GOT THIS SHIT NOW: ", comment)
-            setComments(prev => [...prev, comment])
-            if (comment.error) {
-                console.error("Failed to add comment:", comment.error)
-                setIsSubmitting(false)
-            }
-        })
-
-        if (open) {
+        if (open && alertId && socket) {
+            fetchComments()
+            socket.on(`comments-${alertId}`, (comment) => {
+                setComments(prev => [...prev, comment])
+                if (comment.error) {
+                    console.error("Failed to add comment:", comment.error)
+                    setIsSubmitting(false)
+                }
+            })
         }
 
         return () => {
