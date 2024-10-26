@@ -50,7 +50,7 @@ export default function ReportCardModal() {
     if (isDesktop) {
         return (
             <Dialog open={open} onOpenChange={onClose}>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent className=" max-w-[425px] sm:max-w-[625px]">
                     <DialogHeader>
                         <DialogDescription></DialogDescription>
                     </DialogHeader>

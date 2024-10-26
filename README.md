@@ -9,3 +9,5 @@ it's chill, i'm back on it now, i was away, i wanna finish an mvp soon and host 
 ![Image description](./assets/1.2.png)
 
 i'm working on iteration 2 for now, from Friday, 26 october - Friday 01 november
+
+i'll post screenshots after every iteration, for progress tracking

@@ -96,7 +96,7 @@ export default function AlertMessageSheet() {
 
     return (
         <Sheet open={open} onOpenChange={onClose}>
-            <SheetContent className="w-[400px] sm:w-[540px] h-full flex flex-col">
+            <SheetContent className="w-[400px] sm:w-[540px] lg:max-w-[750px] h-full flex flex-col">
                 <SheetHeader className="border-b pb-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
