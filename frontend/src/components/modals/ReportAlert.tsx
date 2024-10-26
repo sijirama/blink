@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import useSignOut from 'react-auth-kit/hooks/useSignOut';
 
 const formSchema = z.object({
     content: z.string().min(1, {
@@ -46,6 +47,7 @@ export default function ReportAlert() {
             content: "",
         },
     });
+    const signOut = useSignOut();
 
     const reportAlertMutation = useMutation({
         mutationFn: (alertData: { content: string; location: { latitude: number; longitude: number } }) =>
@@ -56,8 +58,15 @@ export default function ReportAlert() {
             form.reset();
         },
         onError: (error: any) => {
+            const errorMessage = error.response.data.error
+            const status = error.response.status
+
+            if (status === "401") {
+                signOut();
+            }
+
             toast.error(
-                error.response?.data?.message || "An error occurred while reporting the alert."
+                error.response?.data?.message || errorMessage || "An error occurred while reporting the alert."
             );
         },
     });

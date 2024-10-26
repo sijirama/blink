@@ -41,8 +41,8 @@ export default function MapComponent() {
                 initialViewState={{
                     longitude: coords?.longitude,
                     latitude: coords?.latitude,
-                    zoom: 18,
-                    pitch: 70,
+                    zoom: 17,
+                    pitch: 60,
                 }}
                 onClick={handleMapClick}
                 style={{ width: "100%", height: "100vh" }}
