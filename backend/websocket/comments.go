@@ -4,10 +4,8 @@ import (
 	"chookeye-core/database"
 	"chookeye-core/schemas"
 	"fmt"
-	"log"
-	//"time"
-
 	"github.com/zishang520/socket.io/v2/socket"
+	"log"
 )
 
 var commentServer *socket.Socket
@@ -61,8 +59,14 @@ func BroadcastNewComment(alertID uint, comment schemas.Comment) {
 
 	fmt.Printf("%v %v %v \n", commentServer.Id(), room, roomName)
 
-	//err := commentServer.To(socket.Room(roomName)).Emit(roomName, comment)
+	//NOTE: SIJII, REAL TIME SOLUTION
+	/*
+		    the first line emits back to the user, the second emits back the others connected in the server
+			  i should combine this to one function actually
+	*/
+
 	err := commentServer.Emit(roomName, comment)
+	err = commentServer.Broadcast().Emit(roomName, comment)
 
 	if err != nil {
 		log.Printf("Error broadcasting comment: %v", err)

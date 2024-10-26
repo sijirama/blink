@@ -36,7 +36,7 @@ const formSchema = z.object({
 });
 
 export default function ReportAlert() {
-    const { type, isOpen, onClose } = useInterface();
+    const { type, isOpen, onClose, onOpen } = useInterface();
     const { coords } = useLocationStore();
     const isAuthenticated = useIsAuthenticated();
     const open = isOpen && type === "reportAlert";
@@ -61,8 +61,12 @@ export default function ReportAlert() {
             const errorMessage = error.response.data.error
             const status = error.response.status
 
-            if (status === "401") {
+            if (status === 401) {
                 signOut();
+                toast.error("Youre not logged in")
+                onClose()
+                onOpen("signInForm")
+                return
             }
 
             toast.error(
@@ -73,6 +77,7 @@ export default function ReportAlert() {
 
     function onSubmit(data: z.infer<typeof formSchema>) {
         if (!isAuthenticated) {
+            onOpen("signInForm")
             toast.error("Please log in to report an alert.");
             return;
         }
