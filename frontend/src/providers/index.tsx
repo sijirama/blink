@@ -25,7 +25,7 @@ export default function index({ children }: Provider) {
                     <SideViewLayout>
                         {children}
                     </SideViewLayout>
-                    <Toaster />
+                    <Toaster position="top-center" />
                 </QueryClientProvider>
             </AuthProvider>
         </>
