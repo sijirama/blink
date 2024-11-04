@@ -1,4 +1,3 @@
-import useSignOut from 'react-auth-kit/hooks/useSignOut';
 import { AlertCircle, LogOut, MicIcon } from 'lucide-react';
 import {
     DropdownMenu,
@@ -8,26 +7,30 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { avatarImageUrl } from '@/lib/avatar';
-import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
-import { User } from '@/types';
 import { socket } from '@/lib/socket';
 import { useInterface } from '@/store/interface';
+import useSignOut from 'react-auth-kit/hooks/useSignOut'
+import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 
 const Userbutton = () => {
+
     const signOut = useSignOut();
     const auth = useAuthUser();
-    const isAuthenticated = useIsAuthenticated();
-
     const { onOpen } = useInterface()
+    const isAuthenticated = useIsAuthenticated();
 
     const handleSignOut = () => {
         signOut();
+        onOpen("signInForm")
     };
 
-    if (!isAuthenticated || !auth) {
+    // Check the function call, not the function itself
+    if (!isAuthenticated) {
         return null;
     }
+
+    if (!auth) return null;
 
     return (
         <div className="">
@@ -39,7 +42,7 @@ const Userbutton = () => {
                             : 'border-purple-300'
                             }`}
                         style={{
-                            backgroundImage: `url(${avatarImageUrl(auth as User)})`,
+                            backgroundImage: `url(${avatarImageUrl(auth)})`,
                         }}
                         aria-label="User menu"
                     />

@@ -16,7 +16,7 @@ const AlertMarker = ({ alert }: MarkerProps) => {
         <Marker key={alert.ID} latitude={alert.Location.Latitude} longitude={alert.Location.Longitude}>
             <div
                 onClick={() => onOpen("reportCard", { alertId: alert.ID })}
-                className="pulse-circle"
+                className="pulse-circle cursor-pointer"
                 style={{
                     width: `${radiusInPixels * 0.8}px`,
                     height: `${radiusInPixels * 0.8}px`,

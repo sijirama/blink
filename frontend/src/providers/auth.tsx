@@ -1,4 +1,4 @@
-import { authKitStore } from '@/store/auth';
+import { authKitStore } from '@/lib/reactauthkit';
 import AuthKitProvider from 'react-auth-kit';
 
 interface AuthProviderProps {

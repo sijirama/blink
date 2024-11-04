@@ -56,9 +56,8 @@ const SignInForm = () => {
                         type: 'Bearer',
                     },
                     //refresh: token,
-                    userState: {
-                        user,
-                    },
+                    userState: user,
+
                 });
                 onClose()
                 toast.success('Login successful');
@@ -103,7 +102,7 @@ const SignInForm = () => {
                     )}
                 />
                 <Button type="submit">Sign In</Button>
-                <div className='w-full p-1 flex items-center text-xs cursor-pointer justify-center bg-slate-200 rounded-lg'  onClick={callToSignUp}>
+                <div className='w-full p-1 flex items-center text-xs cursor-pointer justify-center bg-slate-200 rounded-lg' onClick={callToSignUp}>
                     <p>if you're new to chookeye, Register</p>
                 </div>
             </form>

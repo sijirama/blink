@@ -42,10 +42,10 @@ export default function SignUpFormModal() {
                     <DialogHeader>
                         <DialogTitle>Sign Up</DialogTitle>
                         <DialogDescription>
-                            welcome to chookeye
+                            welcome to blink
                         </DialogDescription>
                     </DialogHeader>
-                    <SignUpForm />
+                    <SignUpForm open={open} />
                 </DialogContent>
             </Dialog>
 
@@ -59,10 +59,10 @@ export default function SignUpFormModal() {
                     <DrawerHeader className="text-left">
                         <DrawerTitle>Sign Up</DrawerTitle>
                         <DrawerDescription>
-                            welcome to chookeye
+                            welcome to blink
                         </DrawerDescription>
                     </DrawerHeader>
-                    <SignUpForm />
+                    <SignUpForm open={open} />
                 </div>
             </DrawerContent>
         </Drawer>

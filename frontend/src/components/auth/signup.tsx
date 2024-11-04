@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -25,7 +25,11 @@ const signUpSchema = z.object({
     password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
-const SignUpForm = () => {
+interface Props {
+    open: boolean
+}
+
+const SignUpForm = ({ open }: Props) => {
     const [isUsernameTaken, setIsUsernameTaken] = useState(false);
     const [isUsernameValid, setIsUsernameValid] = useState(false);
     const { onOpen, onClose } = useInterface();
@@ -38,6 +42,11 @@ const SignUpForm = () => {
             password: '',
         },
     });
+
+    useEffect(() => {
+        if (open) {
+        }
+    }, [open])
 
     const callToSignIn = () => {
         onClose()
@@ -114,6 +123,8 @@ const SignUpForm = () => {
                         </FormItem>
                     )}
                 />
+
+
                 <FormField
                     control={form.control}
                     name="username"
@@ -124,8 +135,9 @@ const SignUpForm = () => {
                                 <Input
                                     {...field}
                                     className={cn(
+                                        form.getValues("username").length < 3 && "ring-0",
+                                        isUsernameTaken && 'ring-2 ring-red-500',
                                         isUsernameValid && 'ring-2 ring-green-500',
-                                        isUsernameTaken && 'ring-2 ring-red-500'
                                     )}
                                     onChange={(e) => {
                                         field.onChange(e);
@@ -152,7 +164,7 @@ const SignUpForm = () => {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" disabled={!isFormValid}>Sign Up</Button>
+                <Button type="submit" disabled={!isFormValid}>Join Blink</Button>
                 <div className='w-full p-1 cursor-pointer flex items-center justify-center bg-slate-200 rounded-lg' onClick={callToSignIn}>
                     <p className='text-xs'>Have an account ?, click here to signin</p>
                 </div>

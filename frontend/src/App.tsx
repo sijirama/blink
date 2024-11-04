@@ -6,11 +6,13 @@ import { Alert } from "./types/alert";
 import useAlertStore from "./store/alert";
 import FloatingMenu from "./components/custom/FloatingMenu";
 import MapComponent from "./components/custom/Map";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 function App() {
     const { coords } = useGeolocated();
     const { addAlert } = useAlertStore();
     const radius = 1000000
+    const auth = useAuthUser();
 
     useEffect(() => {
 
@@ -44,10 +46,11 @@ function App() {
         if (coords) {
             joinAlertRoom(coords.latitude, coords.longitude, radius);
         }
-    }, [coords]);
+    }, [coords, auth]);
 
     return (
         <main className="font-poppins">
+
             <FloatingMenu />
             <MapComponent />
         </main>

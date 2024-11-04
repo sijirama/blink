@@ -2,12 +2,14 @@
 import { useInterface } from '@/store/interface';
 import { LocationManager } from './LocationManager'
 import Userbutton from './Userbutton'
+import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
-//import LocationComponent from '../misc/locationTest';
 
 export default function FloatingMenu() {
-    const isAuthenticated = useIsAuthenticated();
     const { onOpen } = useInterface()
+    const isAuthenticated = useIsAuthenticated();
+    const auth = useAuthUser();
+
     return (
         <div className='fixed top-4 right-12 lg:right-20 z-50 flex items-center gap-2 bg-white p-2 rounded-lg'>
             <LocationManager />

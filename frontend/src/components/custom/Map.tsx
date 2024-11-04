@@ -3,7 +3,6 @@ import { useLocationStore } from '@/store/location';
 import useAlertStore from '@/store/alert';
 import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 import { avatarImageUrl } from '@/lib/avatar';
-import { User } from '@/types';
 import { socket } from '@/lib/socket';
 import { useMemo } from 'react';
 import AlertMarker from './AlertMarker';
@@ -17,7 +16,6 @@ export default function MapComponent() {
     const { alerts } = useAlertStore()
     const auth = useAuthUser();
 
-
     const alertsMarkers = useMemo(() => alerts.map((alert) => {
         return (
             <AlertMarker alert={alert} />
@@ -29,8 +27,7 @@ export default function MapComponent() {
     }
 
     const handleMapClick = (event: any) => {
-        // Add alert to the map
-        console.log('Map clicked', event.lngLat);
+        //console.log('Map clicked', event.lngLat);
     }
 
     return (
@@ -61,14 +58,14 @@ export default function MapComponent() {
                                         : 'border-purple-300'
                                         }`}
                                     style={{
-                                        backgroundImage: `url(${avatarImageUrl(auth as User)})`,
+                                        backgroundImage: `url(${avatarImageUrl(auth)})`,
                                     }}
                                     aria-label="User menu"
                                 />
 
                             ) : (
-                                <div className="bg-red-500 p-2 rounded-full text-white">
-                                    here
+                                <div className="bg-blue-500 animate-pulse p-2 rounded-full text-white">
+
                                 </div>
                             )
                         }
