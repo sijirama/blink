@@ -9,6 +9,7 @@ import MapComponent from "./components/custom/Map";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { onMessage } from "firebase/messaging";
 import { app, messaging } from "./lib/firebase";
+import { toast } from "sonner";
 
 function App() {
 
@@ -55,6 +56,9 @@ function App() {
         console.log("Firebase initialized:", app);
         const unsub = onMessage(messaging, (payload) => {
             console.log("THE FUCKING PAYLOAD IS: ", payload)
+            toast.warning(payload.notification?.title, {
+                description: payload.notification?.body,
+            })
         })
         return unsub;
     }, [])

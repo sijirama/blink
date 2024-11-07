@@ -53,7 +53,9 @@ export default function ReportAlert() {
         mutationFn: (alertData: { content: string; location: { latitude: number; longitude: number } }) =>
             axios.post('/api/alert', alertData),
         onSuccess: () => {
-            toast.success("Your alert has been successfully reported");
+            toast.success("Your alert has been successfully reported", {
+                position: "bottom-right"
+            });
             onClose();
             form.reset();
         },
