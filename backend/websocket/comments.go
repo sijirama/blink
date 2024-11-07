@@ -55,10 +55,6 @@ func BroadcastNewComment(alertID uint, comment schemas.Comment) {
 
 	roomName := fmt.Sprintf("comments-%v", alertID)
 
-	room := socket.Room(roomName)
-
-	fmt.Printf("%v %v %v \n", commentServer.Id(), room, roomName)
-
 	//NOTE: SIJII, REAL TIME SOLUTION
 	/*
 		    the first line emits back to the user, the second emits back the others connected in the server
@@ -71,6 +67,4 @@ func BroadcastNewComment(alertID uint, comment schemas.Comment) {
 	if err != nil {
 		log.Printf("Error broadcasting comment: %v", err)
 	}
-
-	fmt.Println("Sent to the shit place")
 }

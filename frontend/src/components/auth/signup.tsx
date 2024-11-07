@@ -32,6 +32,7 @@ interface Props {
 const SignUpForm = ({ open }: Props) => {
     const [isUsernameTaken, setIsUsernameTaken] = useState(false);
     const [isUsernameValid, setIsUsernameValid] = useState(false);
+    const [isUsernameChecked, setIsUsernameChecked] = useState(false);
     const { onOpen, onClose } = useInterface();
 
     const form = useForm({
@@ -45,30 +46,50 @@ const SignUpForm = ({ open }: Props) => {
 
     useEffect(() => {
         if (open) {
+            // Reset form and states when the form opens
+            form.reset({
+                email: '',
+                username: '',
+                password: '',
+            });
+            setIsUsernameTaken(false);
+            setIsUsernameValid(false);
+            setIsUsernameChecked(false);
         }
-    }, [open])
+    }, [open, form]);
+
+    // Add this to prevent browser auto-fill
+    useEffect(() => {
+        const formElement = document.querySelector('form');
+        if (formElement) {
+            formElement.setAttribute('autocomplete', 'off');
+        }
+    }, []);
 
     const callToSignIn = () => {
-        onClose()
+        onClose();
         setTimeout(() => {
-            onOpen("signInForm")
-        }
-            , 100
-        )
-    }
-
+            onOpen("signInForm");
+        }, 100);
+    };
 
     const checkUsername = useCallback(
         debounce(async (username: string) => {
-            if (username.length < 3) {
+            // Reset states when input is empty or too short
+            if (!username || username.length < 3) {
                 setIsUsernameValid(false);
+                setIsUsernameTaken(false);
+                setIsUsernameChecked(false);
                 return;
             }
+
             try {
                 const response = await axios.get(`/api/user/check-username?username=${username}`);
                 const available = response.data.available;
                 setIsUsernameTaken(!available);
                 setIsUsernameValid(available);
+                setIsUsernameChecked(true);
+
                 if (!available) {
                     form.setError('username', {
                         type: 'manual',
@@ -80,6 +101,7 @@ const SignUpForm = ({ open }: Props) => {
             } catch (error) {
                 console.error('Error checking username:', error);
                 setIsUsernameValid(false);
+                setIsUsernameChecked(false);
             }
         }, 300),
         [form]
@@ -95,7 +117,7 @@ const SignUpForm = ({ open }: Props) => {
             const response = await axios.post('/api/auth/signup', values);
             if (response.status === 201) {
                 toast.success('Sign up successful');
-                callToSignIn()
+                callToSignIn();
             } else {
                 toast.error('Sign up failed: please try again later');
             }
@@ -109,7 +131,11 @@ const SignUpForm = ({ open }: Props) => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 font-poppins">
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8 font-poppins"
+                autoComplete="off"
+            >
                 <FormField
                     control={form.control}
                     name="email"
@@ -117,13 +143,17 @@ const SignUpForm = ({ open }: Props) => {
                         <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input type="email" placeholder="example@email.com" {...field} />
+                                <Input
+                                    type="email"
+                                    placeholder="example@email.com"
+                                    {...field}
+                                    autoComplete="new-email"
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-
 
                 <FormField
                     control={form.control}
@@ -134,10 +164,13 @@ const SignUpForm = ({ open }: Props) => {
                             <FormControl>
                                 <Input
                                     {...field}
+                                    autoComplete="new-username"
                                     className={cn(
-                                        form.getValues("username").length < 3 && "ring-0",
-                                        isUsernameTaken && 'ring-2 ring-red-500',
-                                        isUsernameValid && 'ring-2 ring-green-500',
+                                        // Only show colors if the field has been interacted with
+                                        isUsernameChecked && {
+                                            'ring-2 ring-red-500': isUsernameTaken,
+                                            'ring-2 ring-green-500': isUsernameValid && field.value.length >= 3
+                                        }
                                     )}
                                     onChange={(e) => {
                                         field.onChange(e);
@@ -150,6 +183,7 @@ const SignUpForm = ({ open }: Props) => {
                         </FormItem>
                     )}
                 />
+
                 <FormField
                     control={form.control}
                     name="password"
@@ -157,7 +191,11 @@ const SignUpForm = ({ open }: Props) => {
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <Input type="password" {...field} />
+                                <Input
+                                    type="password"
+                                    {...field}
+                                    autoComplete="new-password"
+                                />
                             </FormControl>
                             <FormDescription>Password must be at least 6 characters</FormDescription>
                             <FormMessage />
@@ -166,7 +204,7 @@ const SignUpForm = ({ open }: Props) => {
                 />
                 <Button type="submit" disabled={!isFormValid}>Join Blink</Button>
                 <div className='w-full p-1 cursor-pointer flex items-center justify-center bg-slate-200 rounded-lg' onClick={callToSignIn}>
-                    <p className='text-xs'>Have an account ?, click here to signin</p>
+                    <p className='text-xs'>Have an account? Click here to sign in</p>
                 </div>
             </form>
         </Form>

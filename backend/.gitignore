@@ -1,3 +1,5 @@
+private
+
 # Go build artifacts
 /bin/
 /pkg/

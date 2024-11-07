@@ -7,8 +7,11 @@ import useAlertStore from "./store/alert";
 import FloatingMenu from "./components/custom/FloatingMenu";
 import MapComponent from "./components/custom/Map";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { onMessage } from "firebase/messaging";
+import { app, messaging } from "./lib/firebase";
 
 function App() {
+
     const { coords } = useGeolocated();
     const { addAlert } = useAlertStore();
     const radius = 1000000
@@ -19,7 +22,7 @@ function App() {
         socket.connect();
 
         socket.on("connect", () => {
-            console.log('Connected to socket server');
+            //console.log('Connected to socket server');
             if (coords) {
                 joinAlertRoom(coords.latitude, coords.longitude, radius);
             }
@@ -30,7 +33,7 @@ function App() {
         });
 
         socket.on('disconnect', () => {
-            console.log('Disconnected from socket server');
+            //console.log('Disconnected from socket server');
         });
 
         return () => {
@@ -38,7 +41,7 @@ function App() {
             socket.off("alert");
             socket.off('disconnect');
             socket.disconnect();
-            console.log('Socket disconnected');
+            //console.log('Socket disconnected');
         };
     }, [coords, addAlert]);
 
@@ -48,9 +51,16 @@ function App() {
         }
     }, [coords, auth]);
 
+    useEffect(() => {
+        console.log("Firebase initialized:", app);
+        const unsub = onMessage(messaging, (payload) => {
+            console.log("THE FUCKING PAYLOAD IS: ", payload)
+        })
+        return unsub;
+    }, [])
+
     return (
         <main className="font-poppins">
-
             <FloatingMenu />
             <MapComponent />
         </main>

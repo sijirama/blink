@@ -25,7 +25,7 @@ const useSocketStore = create<SocketState>((set, get) => ({
             });
 
             socket.on('disconnect', () => {
-                console.log('Socket disconnected');
+                //console.log('Socket disconnected');
                 set({ isConnected: false });
             });
 
@@ -44,7 +44,7 @@ const useSocketStore = create<SocketState>((set, get) => ({
             console.log('Disconnecting from the socket...');
             socket.disconnect();
             set({ socket: null, isConnected: false });
-            console.log('Socket disconnected');
+            //console.log('Socket disconnected');
         }
     },
 }));

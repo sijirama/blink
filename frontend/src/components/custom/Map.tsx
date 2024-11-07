@@ -18,7 +18,7 @@ export default function MapComponent() {
 
     const alertsMarkers = useMemo(() => alerts.map((alert) => {
         return (
-            <AlertMarker alert={alert} />
+            <AlertMarker alert={alert} key={alert.ID} />
         )
     }), [alerts])
 
@@ -27,7 +27,7 @@ export default function MapComponent() {
     }
 
     const handleMapClick = (event: any) => {
-        //console.log('Map clicked', event.lngLat);
+        console.log('Map clicked', event.lngLat);
     }
 
     return (

@@ -3,12 +3,16 @@ package api
 import (
 	"chookeye-core/cron"
 	"chookeye-core/routes"
+	"chookeye-core/utils"
 	"chookeye-core/websocket"
+	"fmt"
+	"log"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-var router = gin.Default()
+var router = gin.New()
 
 func SetupRouter() *gin.Engine {
 
@@ -23,9 +27,14 @@ func SetupRouter() *gin.Engine {
 	corsConfig.AllowCredentials = true
 	route.Use(cors.New(corsConfig))
 
-	//pre processes
+	//INFO: pre processes
 	websocket.StartServer(route) //socket server
 	cron.InitializeCronServer()  //cron server
+	err := utils.FirebaseInit()  //initialise firebase
+	if err != nil {
+		fmt.Printf("error connecting to firebase: %v", err)
+		log.Fatal(err)
+	}
 
 	//attach "/api"
 	route = route.Group("/api")

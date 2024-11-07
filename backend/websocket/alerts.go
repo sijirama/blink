@@ -35,9 +35,7 @@ func handleAlertConnection(clients ...any) {
 }
 
 func handleJoinAlertRoom(alertClient *socket.Socket, args ...any) {
-	fmt.Printf("Number of args is %s", len(args))
 	alertId := args[0]
-	log.Printf(`WTFFFFFFFFFF: client %s is joining alert-%v`, alertClient.Id(), alertId)
 	alertClient.Join(socket.Room(fmt.Sprintf(`alert-%v`, alertId)))
 }
 

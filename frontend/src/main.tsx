@@ -4,6 +4,7 @@ import App from './App.tsx'
 import './index.css'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Provider from "@/providers/index.tsx"
+import { registerServiceWorker } from './lib/serviceWorker.ts';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -12,3 +13,5 @@ createRoot(document.getElementById('root')!).render(
         </Provider>
     </StrictMode>,
 )
+
+registerServiceWorker()

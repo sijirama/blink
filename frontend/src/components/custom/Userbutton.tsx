@@ -12,6 +12,7 @@ import { socket } from '@/lib/socket';
 import { useInterface } from '@/store/interface';
 import useSignOut from 'react-auth-kit/hooks/useSignOut'
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
+import FCMTokenManager from './FirebaseMessagineManager';
 
 const Userbutton = () => {
 
@@ -58,6 +59,12 @@ const Userbutton = () => {
                             <AlertCircle className="mr-2 h-4 w-4" />
                             <span>View alerts</span>
                         </DropdownMenuItem>
+
+                        <DropdownMenuItem className='lg:hiddenn'>
+                            <FCMTokenManager />
+                        </DropdownMenuItem>
+
+
                         <DropdownMenuItem onClick={handleSignOut}>
                             <LogOut className="mr-2 h-4 w-4" />
                             <span>Log out</span>

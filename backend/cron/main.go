@@ -3,13 +3,11 @@
 package cron
 
 import (
+	"chookeye-core/processes" // Import your existing processes package
 	"fmt"
+	"github.com/go-co-op/gocron/v2"
 	"log"
 	"time"
-
-	"chookeye-core/processes" // Import your existing processes package
-
-	"github.com/go-co-op/gocron/v2"
 )
 
 // CronServer struct to hold the scheduler
@@ -29,7 +27,7 @@ func InitializeCronServer() *CronServer {
 	cronServer := &CronServer{scheduler: scheduler}
 
 	// Add jobs from the processes package to the cron server
-	cronServer.addJob("alert_management", 2*time.Hour, processes.RunAlertManagement) // Replace with your function
+	cronServer.addJob("alert_management", 1*time.Hour, processes.RunAlertManagement) // Replace with your function
 
 	// Start the cron server
 	cronServer.startServer()
@@ -53,5 +51,7 @@ func (cs *CronServer) addJob(cron_name string, interval time.Duration, task func
 // startServer starts the cron server
 func (cs *CronServer) startServer() {
 	cs.scheduler.Start()
-	log.Println("\n\nCron server started.\n\n")
+	log.Println("Cron server started.")
+	log.Println("")
+	log.Println("")
 }

@@ -1,6 +1,7 @@
 package broadcast
 
 import (
+	"chookeye-core/notifications"
 	"chookeye-core/schemas"
 	"chookeye-core/utils"
 	"log"
@@ -37,6 +38,7 @@ func broadcastAlertToNearbyClients(latitude, longitude, radius float64, alertDat
 		distance := utils.CalculateDistance(latitude, longitude, location.Latitude, location.Longitude)
 		if distance <= radius {
 			location.Socket.Emit("alert", alertData)
+			notifications.SendPushNotification(alertData)
 			log.Printf("Alert sent to client %s at distance %v km\n", location.Socket.Id(), distance)
 		}
 		return true

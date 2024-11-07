@@ -16,6 +16,7 @@ type User struct {
 	Username      string         `gorm:"uniqueIndex;not null"`
 	Password      string         `gorm:"not null"`
 	Location      Location       `gorm:"embedded"`
+	DeviceTokens  []DeviceToken  `gorm:"foreignKey:UserID"`
 	Alerts        []Alert        `gorm:"foreignKey:UserID"`
 	Notifications []Notification `gorm:"foreignKey:UserID"`
 	Comments      []Comment      `gorm:"foreignKey:UserID"`
@@ -26,6 +27,7 @@ type User struct {
 type Alert struct {
 	ID          uint      `gorm:"primaryKey"`
 	UserID      uint      `gorm:"not null"`
+	User        User      `gorm:"foreignKey:UserID"`
 	Location    Location  `gorm:"embedded"`
 	Title       string    `gorm:"not null"`
 	Description string    `gorm:"not null"`
@@ -65,8 +67,20 @@ type Notification struct {
 	CreatedAt time.Time
 }
 
+type DeviceToken struct {
+	ID        uint      `gorm:"primaryKey"`
+	UserID    uint      `gorm:"not null"`
+	Token     string    `gorm:"not null"` // FCM token
+	Platform  string    `gorm:"not null"` // web, android, ios
+	Browser   string    // chrome, firefox, etc. (for web)
+	LastUsed  time.Time // track when the token was last used
+	IsValid   bool      `gorm:"default:true"` // flag for invalid/expired tokens
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 func CreateTables(db *gorm.DB) error {
-	err := db.AutoMigrate(&User{}, &Alert{}, &Comment{}, &Notification{}, &Flag{})
+	err := db.AutoMigrate(&User{}, &Alert{}, &Comment{}, &Notification{}, &Flag{}, &DeviceToken{})
 
 	if err != nil {
 		return err

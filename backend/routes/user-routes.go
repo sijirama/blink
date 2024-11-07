@@ -11,9 +11,10 @@ func AddUserRoutes(r *gin.RouterGroup) {
 	{
 		user.GET("/check-username", handlers.CheckUserName)
 
-		protected := user.Group("/")
-		protected.Use(middleware.AuthMiddleware())
+		user.Use(middleware.AuthMiddleware())
 		{
+			user.POST("/deviceId", handlers.RegisterDeviceToken) // get firebase device token
+			user.DELETE("/deviceId", handlers.RemoveDeviceToken) // get firebase device token
 		}
 	}
 }

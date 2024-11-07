@@ -14,6 +14,9 @@ This file implements an alert verification and archiving system that:
 The system aims to automatically manage alert lifecycle based on community feedback,
 helping to maintain the relevance and accuracy of the alert database.
 
+TODO:
+    - revise the calculateScore function
+
 */
 
 import (
@@ -40,26 +43,6 @@ const (
 	ExtensionTime         = 6 * time.Hour
 	ReductionTime         = 3 * time.Hour
 )
-
-func calculateAlertScore(alert schemas.Alert) float64 {
-	var score float64
-	now := time.Now()
-
-	for _, flag := range alert.Flags {
-		weight := getFlagWeight(flag.Type)
-		decayFactor := 1 - float64(now.Sub(flag.CreatedAt))/float64(MaxDecayTime)
-		if decayFactor < 0 {
-			decayFactor = 0
-		}
-		score += weight * decayFactor
-	}
-
-	// Factor in urgency (assuming urgency is 1-10)
-	urgencyFactor := float64(alert.Urgency) / 10.0
-	score *= urgencyFactor
-
-	return score
-}
 
 func getFlagWeight(flagType string) float64 {
 	switch flagType {
@@ -98,6 +81,44 @@ func reduceAlertExpiration(alert schemas.Alert, duration time.Duration) {
 	}
 }
 
+// TODO: revise this
+func calculateAlertScore(alert schemas.Alert) float64 {
+	var score float64
+	now := time.Now()
+
+	for _, flag := range alert.Flags {
+		weight := getFlagWeight(flag.Type)
+		decayFactor := 1 - float64(now.Sub(flag.CreatedAt))/float64(MaxDecayTime)
+		if decayFactor < 0 {
+			decayFactor = 0
+		}
+		score += weight * decayFactor
+	}
+
+	// Factor in urgency (assuming urgency is 1-10)
+	urgencyFactor := float64(alert.Urgency) / 10.0
+	score *= urgencyFactor
+
+	return score
+}
+
+func processAlert(alert schemas.Alert) {
+	score := calculateAlertScore(alert)
+
+	switch {
+	case time.Now().After(alert.ExpiresAt):
+		archiveAlert(alert)
+	case score > VerificationThreshold:
+		extendAlertExpiration(alert, ExtensionTime)
+	case score < ArchiveThreshold:
+		reduceAlertExpiration(alert, ReductionTime)
+	default:
+		// Alert remains active, no change to expiration
+	}
+
+	broadcast.TriggerAlertChange(alert)
+}
+
 func ProcessAlerts() error {
 	var alerts []schemas.Alert
 
@@ -116,23 +137,6 @@ func ProcessAlerts() error {
 
 	wg.Wait()
 	return nil
-}
-
-func processAlert(alert schemas.Alert) {
-	score := calculateAlertScore(alert)
-
-	switch {
-	case time.Now().After(alert.ExpiresAt):
-		archiveAlert(alert)
-	case score > VerificationThreshold:
-		extendAlertExpiration(alert, ExtensionTime)
-	case score < ArchiveThreshold:
-		reduceAlertExpiration(alert, ReductionTime)
-	default:
-		// Alert remains active, no change to expiration
-	}
-
-	broadcast.TriggerAlertChange(alert)
 }
 
 // This function would be called by your cron job
