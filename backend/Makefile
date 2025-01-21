@@ -16,6 +16,7 @@ build:
 clean:
 	docker compose -f compose.dev.yml down -v
 	docker compose -f compose.prod.yml down -v
+	docker compose -f infra.yml down -v
 	#docker system prune -af
 	rm -f main
 
